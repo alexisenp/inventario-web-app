@@ -3,9 +3,10 @@
     <v-col cols="12" sm="8" md="6">
       <v-card>
         <v-card-title class="headline">
-          Login
+          Página de inicio
         </v-card-title>
         <v-card-text>
+          <p>Esta es la página de inicio.</p>
           <hr class="my-3">
           <a
             href="https://nuxtjs.org/"
@@ -41,7 +42,6 @@
 <script>
 
 export default {
-  components: {
-  }
+  components: {}
 }
 </script>

@@ -41,6 +41,32 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: 'AIzaSyAv8kKa07ZNEc_huBe3MFnFwJ7yVH4KPmY',
+          authDomain: 'sistema-inventario-a2987.firebaseapp.com',
+          databaseURL: '',
+          projectId: 'sistema-inventario-a2987',
+          storageBucket: 'sistema-inventario-a2987.appspot.com',
+          messagingSenderId: '863648488577',
+          appId: '1:863648488577:web:9deb5cfca935a22e0c8180',
+          measurementId: 'G-FSY6QS49GN'
+        },
+        services: {
+          auth: {
+            persistence: 'local', // default
+            initialize: {
+              onAuthStateChangedAction: 'onAuthStateChanged'
+            },
+            ssr: true // default es false
+          }, // Just as example. Can be any other service.
+          firestore: true,
+          storage: true
+        }
+      }
+    ]
   ],
   pwa: {
     // disable the modules you don't need
@@ -48,6 +74,16 @@ export default {
     icon: false,
     // if you omit a module key form configuration sensible defaults will be applied
     // manifest: false,
+
+    workbox: {
+      importScripts: [
+        // ...
+        '/firebase-auth-sw.js'
+      ],
+      // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
+      // only set this true for testing and remember to always clear your browser cache in development
+      dev: true
+    }
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
