@@ -1,3 +1,6 @@
 export default () => ({
-  authUser: null
+  authUser: null,
+  listaFuncionarios: [],
+  loading: false,
+  funcionarioSeleccionado: {}
 })

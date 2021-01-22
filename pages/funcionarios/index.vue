@@ -1,3 +1,43 @@
 <template>
-  <h1>Funcionarios</h1>
+  <div>
+    <v-row justify="center" align="center">
+      <v-col cols="12" sm="8" md="8" class="headline">
+        Lista de funcionarios
+      </v-col>
+    </v-row>
+    <v-row justify="center" align="center">
+      <v-col cols="12" sm="8" md="8">
+        <v-btn
+          class="mx-2"
+          fab
+          dark
+          large
+          color="primary"
+          to="/funcionarios/ingreso"
+        >
+          <v-icon dark>
+            mdi-plus
+          </v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row justify="center" align="center">
+      <v-col cols="12" sm="8" md="8">
+        <v-card>
+          <v-card-text>
+            <cmp-table-funcionarios />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
+
+<script>
+import cmpTableFuncionarios from '@/components/tableFuncionarios'
+export default {
+  components: {
+    cmpTableFuncionarios
+  }
+}
+</script>

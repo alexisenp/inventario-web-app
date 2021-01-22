@@ -87,6 +87,8 @@ export default {
     },
     async signInUser () {
       try {
+        // eslint-disable-next-line
+        console.log(this.$fire)
         this.cargando = true
         await this.$fire.auth.signInWithEmailAndPassword(
           this.formData.email,

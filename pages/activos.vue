@@ -1,3 +1,3 @@
 <template>
-  <h1>Funcionarios</h1>
+  <h1>Activos</h1>
 </template>

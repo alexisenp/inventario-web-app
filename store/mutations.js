@@ -18,5 +18,14 @@ export default {
       // use custom claims to control access (see https://firebase.google.com/docs/auth/admin/custom-claims)
       isAdmin
     }
+  },
+  llenaListaFuncionarios (state, payload) {
+    state.listaFuncionarios = payload
+  },
+  commitSetLoading (state, payload) {
+    state.loading = payload
+  },
+  commitSetFuncionarioSeleccionado (state, payload) {
+    state.funcionarioSeleccionado = payload
   }
 }

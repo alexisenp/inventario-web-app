@@ -61,7 +61,7 @@ export default {
               onAuthStateChangedAction: 'onAuthStateChanged'
             },
             ssr: true // default es false
-          }, // Just as example. Can be any other service.
+          },
           firestore: true,
           storage: true
         }

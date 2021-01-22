@@ -39,5 +39,54 @@ export default {
         isAdmin: claims.custom_claim
       })
     }
+  },
+
+  async grabaFuncionario ({ dispatch, commit }, funcionario) {
+    const messageRef = this.$fire.firestore.collection('funcionario').doc()
+    try {
+      await messageRef.set({
+        nombre: funcionario.nombre,
+        email: funcionario.email,
+        departamento: funcionario.departamento
+      })
+    } catch (e) {
+      alert(e)
+      // return
+    }
+  },
+  cargaFuncionarios ({ commit }) {
+    try {
+      commit('commitSetLoading', true)
+      this.$fire.firestore.collection('funcionario').get().then((querySnapshot) => {
+        const funcionarios = []
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          const funcionario = { nombre: doc.data().nombre, email: doc.data().email, departamento: doc.data().departamento }
+          funcionarios.push(funcionario)
+        })
+        commit('llenaListaFuncionarios', funcionarios)
+        commit('commitSetLoading', false)
+      })
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+      // retur
+    }
+  },
+  actionSetLoading ({ commit }, loading) {
+    try {
+      commit('commitSetLoading', loading)
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+    }
+  },
+  actionSetFuncionarioSeleccionado ({ commit }, payload) {
+    try {
+      commit('commitSetFuncionarioSeleccionado', payload)
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+    }
   }
 }
