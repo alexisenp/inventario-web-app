@@ -15,8 +15,16 @@
             <v-col>{{ funcionario.email }}</v-col>
           </v-row>
           <v-row>
+            <v-col>Rut</v-col>
+            <v-col>{{ funcionario.rut }}</v-col>
+          </v-row>
+          <v-row>
             <v-col>Departamento</v-col>
             <v-col>{{ funcionario.departamento }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col>Sección</v-col>
+            <v-col>{{ funcionario.seccion }}</v-col>
           </v-row>
         </v-card-text>
       </v-card>

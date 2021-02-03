@@ -1,165 +1,185 @@
 <template>
-  <div>
-    <div>
-      <h1>Ingreso nuevo activos</h1>
-    </div>
-    <v-stepper v-model="e1">
-      <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1">
-          Ingreso activo
-        </v-stepper-step>
+  <v-container>
+    <v-row justify="center" align="center">
+      <v-row justify="center" align="center">
+        <v-col cols="12" sm="8" md="8" class="headline my-4">
+          Nuevo activo
+        </v-col>
+      </v-row>
+    </v-row>
+    <v-row justify="center" align="center">
+      <v-col cols="12" sm="11" md="11">
+        <v-stepper v-model="e1">
+          <v-stepper-header>
+            <v-stepper-step
+              :complete="e1 > 1"
+              step="1"
+            >
+              Datos de Compra
+            </v-stepper-step>
+            <v-divider />
+            <v-stepper-step
+              :complete="e1 > 2"
+              step="2"
+            >
+              Activo
+            </v-stepper-step>
+            <v-divider />
+            <v-stepper-step step="3">
+              Ubicación
+            </v-stepper-step>
+          </v-stepper-header>
 
-        <v-divider />
+          <v-stepper-items>
+            <v-stepper-content step="1">
+              <cmp-datos-compra />
+              <v-card-actions class="justify-space-around mt-3">
+                <v-btn text>
+                  Cancelar
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  @click="e1 = 2"
+                >
+                  Continuar
+                </v-btn>
+              </v-card-actions>
+            </v-stepper-content>
 
-        <v-stepper-step :complete="e1 > 2" step="2">
-          Name of step 2
-        </v-stepper-step>
+            <v-stepper-content step="2">
+              <cmp-datos-activo />
+              <v-card-actions class="justify-space-around mt-3">
+                <v-btn
+                  color="primary"
+                  @click="e1 = 1"
+                >
+                  Volver
+                </v-btn>
+                <v-btn text>
+                  Cancelar
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  @click="pasaAE3()"
+                >
+                  Continuar
+                </v-btn>
+              </v-card-actions>
+            </v-stepper-content>
 
-        <v-divider />
-
-        <v-stepper-step step="3">
-          Name of step 3
-        </v-stepper-step>
-      </v-stepper-header>
-
-      <v-stepper-items>
-        <v-stepper-content step="1">
-          <form>
-            <v-text-field
-              v-model="name"
-              :error-messages="nameErrors"
-              :counter="10"
-              label="Name"
-              required
-              @input="$v.name.$touch()"
-              @blur="$v.name.$touch()"
-            />
-            <v-text-field
-              v-model="email"
-              :error-messages="emailErrors"
-              label="E-mail"
-              required
-              @input="$v.email.$touch()"
-              @blur="$v.email.$touch()"
-            />
-            <v-select
-              v-model="select"
-              :items="items"
-              :error-messages="selectErrors"
-              label="Item"
-              required
-              @change="$v.select.$touch()"
-              @blur="$v.select.$touch()"
-            />
-            <v-checkbox
-              v-model="checkbox"
-              :error-messages="checkboxErrors"
-              label="Do you agree?"
-              required
-              @change="$v.checkbox.$touch()"
-              @blur="$v.checkbox.$touch()"
-            />
-          </form>
-
-          <v-btn color="primary" @click="e1 = 2">
-            Continuar
-          </v-btn>
-          <v-btn text>
-            Cancelar
-          </v-btn>
-        </v-stepper-content>
-
-        <v-stepper-content step="2">
-          <v-card class="mb-12" color="grey lighten-1" height="200px" />
-
-          <v-btn color="primary" @click="e1 = 3">
-            Continue
-          </v-btn>
-
-          <v-btn text>
-            Cancel
-          </v-btn>
-        </v-stepper-content>
-
-        <v-stepper-content step="3">
-          <v-card class="mb-12" color="grey lighten-1" height="200px" />
-
-          <v-btn color="primary" @click="e1 = 1">
-            Continue
-          </v-btn>
-
-          <v-btn text>
-            Cancel
-          </v-btn>
-        </v-stepper-content>
-      </v-stepper-items>
-    </v-stepper>
-  </div>
+            <v-stepper-content step="3">
+              <cmp-datos-ubicacion />
+              <v-card-actions class="justify-space-around">
+                <v-btn
+                  color="primary"
+                  @click="e1 = 2"
+                >
+                  Volver
+                </v-btn>
+                <v-btn @click="clear">
+                  Limpiar
+                </v-btn>
+                <v-btn
+                  class="mr-4"
+                  @click="submit"
+                >
+                  Enviar
+                </v-btn>
+              </v-card-actions>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, email } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
+import { mapActions } from 'vuex'
+import CmpDatosCompra from '@/components/ingresoActivosDatosCompra'
+import CmpDatosActivo from '@/components/ingresoActivoDatosActivo'
+import CmpDatosUbicacion from '@/components/ingresoActivoDatosUbicacion'
 
 export default {
   mixins: [validationMixin],
 
   validations: {
-    name: { required, maxLength: maxLength(10) },
-    email: { required, email },
     select: { required }
   },
-
   data: () => ({
-    name: '',
-    email: '',
-    select: null,
-    items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
-    checkbox: false,
-    e1: 1
+    date: null,
+    menu: false,
+    e1: 1,
+    items: [
+      'Administración y Finanzas',
+      'Jurídico',
+      'Técnico',
+      'Dirección'
+    ]
   }),
-
   computed: {
     selectErrors () {
       const errors = []
-      if (!this.$v.select.$dirty) {
-        return errors
-      }
-      !this.$v.select.required && errors.push('Item is required')
-      return errors
-    },
-    nameErrors () {
-      const errors = []
-      if (!this.$v.name.$dirty) {
-        return errors
-      }
-      !this.$v.name.maxLength &&
-        errors.push('Name must be at most 10 characters long')
-      !this.$v.name.required && errors.push('Name is required.')
-      return errors
-    },
-    emailErrors () {
-      const errors = []
-      if (!this.$v.email.$dirty) {
-        return errors
-      }
-      !this.$v.email.email && errors.push('Must be valid e-mail')
-      !this.$v.email.required && errors.push('E-mail is required')
+      if (!this.$v.select.$dirty) { return errors }
+      !this.$v.select.required && errors.push('Debe seleccionar un campo')
       return errors
     }
   },
-
+  watch: {
+    menu (val) {
+      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+    }
+  },
   methods: {
-    submit () {
+    ...mapActions([
+      'grabaFuncionario'
+    ]),
+    pasaAE3 () {
+      // validar que se haya ingresado al menos un activo antes de continuar
+      this.e1 = 3
+    },
+    async submit () {
       this.$v.$touch()
+      if (!this.$v.$invalid) {
+        alert(this.nombreempresa)
+        await this.grabaFuncionario(
+          { nombreempresa: this.nombreempresa, rut: this.rut, ordencompra: this.ordencompra, factura: this.factura, tipo: this.select })
+        this.$router.push('/activos')
+      } /* else {
+        // eslint-disable-next-line
+        console.log('slasdlksd')
+      } */
     },
     clear () {
       this.$v.$reset()
-      this.name = ''
-      this.email = ''
+      this.nombreempresa = ''
+      this.rut = ''
+      this.ordencompra = ''
+      this.factura = ''
+      this.nombreactivo = ''
+      this.fechaactivacion = ''
+      this.ninventario = ''
+      this.nserie = ''
+      this.tipo = ''
+      this.valor = ''
+      this.descripcion = ''
       this.select = null
       this.checkbox = false
     }
+  },
+  save (date) {
+    this.$refs.menu.save(date)
+  },
+  guardar (dateactivacion) {
+    this.$refs.menu.save(dateactivacion)
+  },
+  // eslint-disable-next-line
+  components: {
+    CmpDatosCompra,
+    CmpDatosActivo,
+    CmpDatosUbicacion
   }
 }
 </script>

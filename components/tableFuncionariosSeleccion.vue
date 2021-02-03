@@ -1,14 +1,24 @@
 <template>
-  <div>
+  <v-card>
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      />
+    </v-card-title>
     <v-data-table
       :headers="headers"
+      :loading="loading"
       :items="funcionarios"
       class="elevation-1 row-pointer"
-      :loading="loading"
       loading-text="Cargando... espere por favor"
+      :search="search"
       @click:row="clicked"
     />
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -19,6 +29,7 @@ export default {
   },
   data () {
     return {
+      search: '',
       headers: [
         {
           text: 'Nombre',
@@ -41,7 +52,6 @@ export default {
   methods: {
     clicked (value) {
       this.$store.dispatch('actionSetFuncionarioSeleccionado', value)
-      this.$router.push('/funcionarios/funcionario')
     }
   }
 }

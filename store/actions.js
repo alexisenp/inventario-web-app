@@ -46,12 +46,16 @@ export default {
     try {
       await messageRef.set({
         nombre: funcionario.nombre,
+        apellido: funcionario.apellido,
+        rut: funcionario.rut,
         email: funcionario.email,
-        departamento: funcionario.departamento
+        departamento: funcionario.departamento,
+        seccion: funcionario.seccion
       })
+      return true
     } catch (e) {
-      alert(e)
-      // return
+      alert('Ha ocurrido un error al grabar los datos. \n El siguiente es el error devuelto por el sistema, este sera util para que los programadores identifiquen el problema: \n ' + e)
+      return false
     }
   },
   cargaFuncionarios ({ commit }) {
@@ -61,7 +65,7 @@ export default {
         const funcionarios = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const funcionario = { nombre: doc.data().nombre, email: doc.data().email, departamento: doc.data().departamento }
+          const funcionario = { nombre: doc.data().nombre, apellido: doc.data().apellido, rut: doc.data().rut, email: doc.data().email, departamento: doc.data().departamento, seccion: doc.data().seccion }
           funcionarios.push(funcionario)
         })
         commit('llenaListaFuncionarios', funcionarios)
