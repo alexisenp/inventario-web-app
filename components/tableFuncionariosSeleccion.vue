@@ -31,15 +31,14 @@ export default {
     return {
       search: '',
       headers: [
+        { text: 'Rut', value: 'rut', sortable: false },
         {
           text: 'Nombre',
           align: 'start',
           sortable: false,
           value: 'nombre'
         },
-        { text: 'Apellido', value: 'apellido', sortable: false },
-        { text: 'Departamento', value: 'departamento' },
-        { text: 'Sección', value: 'seccion' }
+        { text: 'Apellido', value: 'apellido', sortable: false }
       ]
     }
   },
@@ -52,6 +51,7 @@ export default {
   methods: {
     clicked (value) {
       this.$store.dispatch('actionSetFuncionarioSeleccionado', value)
+      this.$emit('cierra-dialogo')
     }
   }
 }
