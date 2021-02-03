@@ -51,7 +51,7 @@
                     Asignar funcionario
                   </v-toolbar>
                   <v-card-text>
-                    <cmp-table-funcionarios />
+                    <cmp-table-funcionarios @cierra-dialogo="cierraDialog" />
                   </v-card-text>
                   <v-card-actions class="justify-end">
                     <v-btn
@@ -66,7 +66,7 @@
             </v-col>
             <v-col>
               <v-text-field
-                v-model="funcionario"
+                v-model="nombreFuncionario"
                 label="Funcionario"
                 required
                 solo
@@ -95,20 +95,25 @@
 
 <script>
 import cmpTableFuncionarios from '@/components/tableFuncionariosSeleccion'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     cmpTableFuncionarios
   },
   data: () => ({
     buscar: '',
-    funcionario: '',
     ubicacion: '',
     dialog: false
   }),
+  computed: {
+    ...mapGetters({
+      funcionario: 'getFuncionarioSeleccionado'
+    }),
+    nombreFuncionario () {
+      return this.funcionario.nombre + ' ' + this.funcionario.apellido
+    }
+  },
   methods: {
-    confirmacionIngreso () {
-      alert('confirmacion de datos de ingreso')
-    },
     buscarFuncionario () {
       alert('Busca funcinario')
     },
