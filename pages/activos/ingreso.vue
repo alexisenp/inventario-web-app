@@ -32,18 +32,7 @@
 
           <v-stepper-items>
             <v-stepper-content step="1">
-              <cmp-datos-compra />
-              <v-card-actions class="justify-space-around mt-3">
-                <v-btn text>
-                  Cancelar
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  @click="e1 = 2"
-                >
-                  Continuar
-                </v-btn>
-              </v-card-actions>
+              <cmp-datos-compra @avanza-a-activo="pasaAE2" />
             </v-stepper-content>
 
             <v-stepper-content step="2">
@@ -139,6 +128,10 @@ export default {
     pasaAE3 () {
       // validar que se haya ingresado al menos un activo antes de continuar
       this.e1 = 3
+    },
+    pasaAE2 () {
+      // validar que se haya ingresado al menos un activo antes de continuar
+      this.e1 = 2
     },
     async submit () {
       this.$v.$touch()
