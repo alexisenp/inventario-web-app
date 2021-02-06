@@ -1,133 +1,149 @@
 <template>
-  <v-card>
-    <v-card-text>
-      <form class="ma-5">
-        <v-row align="center">
-          <v-col class="d-flex" cols="12" sm="6">
-            <v-text-field
-              v-model="nombreactivo"
-              :error-messages="nombreactivoErrors"
-              label="Nombre del activo"
-              required
-              @input="$v.nombreactivo.$touch()"
-              @blur="$v.nombreactivo.$touch()"
-            />
-          </v-col>
-          <v-col class="d-flex" cols="12" sm="6">
-            <v-text-field
-              v-model="nserie"
-              :error-messages="nserieErrors"
-              label="Serie"
-              required
-              @input="$v.nserie.$touch()"
-              @blur="$v.nserie.$touch()"
-            />
-          </v-col>
-        </v-row>
-        <v-row align="center">
-          <v-col class="d-flex" cols="12" sm="6">
-            <v-text-field
-              v-model="tipo"
-              :error-messages="tipoErrors"
-              label="Tipo"
-              required
-              @input="$v.tipo.$touch()"
-              @blur="$v.tipo.$touch()"
-            />
-          </v-col>
-          <v-col class="d-flex" cols="12" sm="6">
-            <v-text-field
-              v-model="valor"
-              :error-messages="valorErrors"
-              label="Valor"
-              required
-              @input="$v.valor.$touch()"
-              @blur="$v.valor.$touch()"
-            />
-          </v-col>
-        </v-row>
-        <v-row align="center">
-          <v-col class="d-flex" cols="12" sm="12">
-            <v-text-field
-              v-model="descripcion"
-              :error-messages="descripcionErrors"
-              label="Descripcion"
-              required
-              @input="$v.descripcion.$touch()"
-              @blur="$v.descripcion.$touch()"
-            />
-          </v-col>
-        </v-row>
-        <v-row align="center" justify="space-around">
-          <v-col class="d-flex" justify="space-around" cols="12" sm="6">
-            <v-btn @click="clear">
-              Limpiar
-            </v-btn>
-          </v-col>
-          <v-col class="d-flex" cols="12" sm="6">
-            <v-btn
-              class="mr-4"
-              @click="agregarActivo"
-            >
-              Agregar
-            </v-btn>
-          </v-col>
-        </v-row>
-      </form>
-      <p class="title">
-        Activos
-      </p>
-      <v-simple-table
-        v-if="activos.length > 0 "
-        @click:row="clicked"
+  <div>
+    <v-card>
+      <v-card-text>
+        <form class="ma-5">
+          <v-row align="center">
+            <v-col class="d-flex" cols="12" sm="6">
+              <v-text-field
+                v-model="nombreactivo"
+                :error-messages="nombreactivoErrors"
+                label="Nombre del activo"
+                required
+                @input="$v.nombreactivo.$touch()"
+                @blur="$v.nombreactivo.$touch()"
+              />
+            </v-col>
+            <v-col class="d-flex" cols="12" sm="6">
+              <v-text-field
+                v-model="nserie"
+                :error-messages="nserieErrors"
+                label="Serie"
+                required
+                @input="$v.nserie.$touch()"
+                @blur="$v.nserie.$touch()"
+              />
+            </v-col>
+          </v-row>
+          <v-row align="center">
+            <v-col class="d-flex" cols="12" sm="6">
+              <v-text-field
+                v-model="tipo"
+                :error-messages="tipoErrors"
+                label="Tipo"
+                required
+                @input="$v.tipo.$touch()"
+                @blur="$v.tipo.$touch()"
+              />
+            </v-col>
+            <v-col class="d-flex" cols="12" sm="6">
+              <v-text-field
+                v-model="valor"
+                :error-messages="valorErrors"
+                label="Valor"
+                required
+                @input="$v.valor.$touch()"
+                @blur="$v.valor.$touch()"
+              />
+            </v-col>
+          </v-row>
+          <v-row align="center">
+            <v-col class="d-flex" cols="12" sm="12">
+              <v-text-field
+                v-model="descripcion"
+                :error-messages="descripcionErrors"
+                label="Descripcion"
+                required
+                @input="$v.descripcion.$touch()"
+                @blur="$v.descripcion.$touch()"
+              />
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="space-around">
+            <v-col class="d-flex" justify="space-around" cols="12" sm="6">
+              <v-btn @click="clear">
+                Limpiar
+              </v-btn>
+            </v-col>
+            <v-col class="d-flex" cols="12" sm="6">
+              <v-btn
+                class="mr-4"
+                @click="agregarActivo"
+              >
+                Agregar
+              </v-btn>
+            </v-col>
+          </v-row>
+        </form>
+        <p class="title">
+          Activos
+        </p>
+        <v-simple-table
+          v-if="activos.length > 0 "
+          @click:row="clicked"
+        >
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">
+                  Nombre Activo
+                </th>
+                <th class="text-left">
+                  N° Serie
+                </th>
+                <th class="text-left">
+                  Valor
+                </th>
+                <th class="text-left">
+                  Borrar
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="item in activos"
+                :key="item.key"
+              >
+                <td>{{ item.nombre }}</td>
+                <td>{{ item.serie }}</td>
+                <td>{{ item.valor }}</td>
+                <td>
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    small
+                    color="primary"
+                  >
+                    <v-icon dark>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+        <div v-else>
+          No ha ingresado datos
+        </div>
+      </v-card-text>
+    </v-card>
+    <v-card-actions class="justify-space-around mt-3">
+      <v-btn
+        color="primary"
+        @click="retroceder()"
       >
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">
-                Nombre Activo
-              </th>
-              <th class="text-left">
-                N° Serie
-              </th>
-              <th class="text-left">
-                Valor
-              </th>
-              <th class="text-left">
-                Borrar
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="item in activos"
-              :key="item.key"
-            >
-              <td>{{ item.nombre }}</td>
-              <td>{{ item.serie }}</td>
-              <td>{{ item.valor }}</td>
-              <td>
-                <v-btn
-                  class="mx-2"
-                  fab
-                  dark
-                  small
-                  color="primary"
-                >
-                  <v-icon dark>
-                    mdi-delete
-                  </v-icon>
-                </v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
-      <div v-else>
-        No ha ingresado datos
-      </div>
-    </v-card-text>
-  </v-card>
+        Volver
+      </v-btn>
+      <v-btn
+        color="primary"
+        @click="continuar()"
+      >
+        Continuar
+      </v-btn>
+    </v-card-actions>
+  </div>
 </template>
 
 <script>
@@ -219,6 +235,16 @@ export default {
     clicked (value) {
       // es-lint-dissable-next-line
       // console.log(value.nombre)
+    },
+    continuar () {
+      if (this.activos.length > 0) {
+        this.$emit('avanza-stepper')
+      } else {
+        alert('Debe ingresar al menos un activo para continuar.')
+      }
+    },
+    retroceder () {
+      this.$emit('retrocede-stepper')
     }
   }
 }

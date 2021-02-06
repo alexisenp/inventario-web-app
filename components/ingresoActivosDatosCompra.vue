@@ -82,9 +82,6 @@
       </v-card>
     </v-card>
     <v-card-actions class="justify-space-around mt-3">
-      <v-btn text>
-        Cancelar
-      </v-btn>
       <v-btn
         color="primary"
         @click="continuar()"
@@ -97,7 +94,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, minLength, email } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 
 export default {
   mixins: [validationMixin],
@@ -105,8 +102,8 @@ export default {
     nombreempresa: { required, minLength: minLength(10) },
     rut: { required, minLength: minLength(10) },
     ordencompra: { required },
-    factura: { required },
-    fechafactura: { required, email }
+    factura: { required }
+    // fechafactura: { required }
   },
   data: () => ({
     nombreempresa: '',
@@ -144,18 +141,21 @@ export default {
       if (!this.$v.factura.$dirty) { return errors }
       !this.$v.factura.required && errors.push('La Factura es obligatoria.')
       return errors
-    },
+    }
+    /*,
     fechafacturaErrors () {
       const errors = []
       if (!this.$v.fechafactura.$dirty) { return errors }
       !this.$v.fechafactura.required && errors.push('La Fecha de la Factura es obligatoria.')
       return errors
-    }
+    } */
   },
   methods: {
     continuar () {
-      alert('Falta validar datos')
-      this.$emit('avanza-a-activo')
+      this.$v.$touch()
+      if (!this.$v.$invalid) {
+        this.$emit('avanza-stepper')
+      }
     }
   }
 }

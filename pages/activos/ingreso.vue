@@ -32,49 +32,15 @@
 
           <v-stepper-items>
             <v-stepper-content step="1">
-              <cmp-datos-compra @avanza-a-activo="pasaAE2" />
+              <cmp-datos-compra @avanza-stepper="avanzaStepper" />
             </v-stepper-content>
 
             <v-stepper-content step="2">
-              <cmp-datos-activo />
-              <v-card-actions class="justify-space-around mt-3">
-                <v-btn
-                  color="primary"
-                  @click="e1 = 1"
-                >
-                  Volver
-                </v-btn>
-                <v-btn text>
-                  Cancelar
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  @click="pasaAE3()"
-                >
-                  Continuar
-                </v-btn>
-              </v-card-actions>
+              <cmp-datos-activo @retrocede-stepper="retrocedeStepper" @avanza-stepper="avanzaStepper" />
             </v-stepper-content>
 
             <v-stepper-content step="3">
-              <cmp-datos-ubicacion />
-              <v-card-actions class="justify-space-around">
-                <v-btn
-                  color="primary"
-                  @click="e1 = 2"
-                >
-                  Volver
-                </v-btn>
-                <v-btn @click="clear">
-                  Limpiar
-                </v-btn>
-                <v-btn
-                  class="mr-4"
-                  @click="submit"
-                >
-                  Enviar
-                </v-btn>
-              </v-card-actions>
+              <cmp-datos-ubicacion @retrocede-stepper="retrocedeStepper" />
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
@@ -125,41 +91,13 @@ export default {
     ...mapActions([
       'grabaFuncionario'
     ]),
-    pasaAE3 () {
+    avanzaStepper () {
       // validar que se haya ingresado al menos un activo antes de continuar
-      this.e1 = 3
+      this.e1 += 1
     },
-    pasaAE2 () {
+    retrocedeStepper () {
       // validar que se haya ingresado al menos un activo antes de continuar
-      this.e1 = 2
-    },
-    async submit () {
-      this.$v.$touch()
-      if (!this.$v.$invalid) {
-        alert(this.nombreempresa)
-        await this.grabaFuncionario(
-          { nombreempresa: this.nombreempresa, rut: this.rut, ordencompra: this.ordencompra, factura: this.factura, tipo: this.select })
-        this.$router.push('/activos')
-      } /* else {
-        // eslint-disable-next-line
-        console.log('slasdlksd')
-      } */
-    },
-    clear () {
-      this.$v.$reset()
-      this.nombreempresa = ''
-      this.rut = ''
-      this.ordencompra = ''
-      this.factura = ''
-      this.nombreactivo = ''
-      this.fechaactivacion = ''
-      this.ninventario = ''
-      this.nserie = ''
-      this.tipo = ''
-      this.valor = ''
-      this.descripcion = ''
-      this.select = null
-      this.checkbox = false
+      this.e1 -= 1
     }
   },
   save (date) {

@@ -25,6 +25,7 @@
           </a>
         </v-card-text>
         <v-card-actions>
+          <cmp-ficha-inventario />
           <v-spacer />
           <v-btn
             color="primary"
@@ -40,8 +41,10 @@
 </template>
 
 <script>
-
+import cmpFichaInventario from '@/components/fichaInventario'
 export default {
-  components: {}
+  components: {
+    cmpFichaInventario
+  }
 }
 </script>
