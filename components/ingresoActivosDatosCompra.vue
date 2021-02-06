@@ -110,7 +110,7 @@ export default {
     rut: '',
     ordencompra: '',
     factura: '',
-    fechafactura: '',
+    // fechafactura: '',
     date: new Date().toISOString().substr(0, 10),
     menu: false,
     menu2: false
@@ -154,7 +154,8 @@ export default {
     continuar () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        this.$emit('avanza-stepper')
+        const datosCompra = { nombreE: this.nombreempresa, rutE: this.rut, oc: this.ordencompra, fact: this.factura, ffact: this.date }
+        this.$emit('avanza-stepper', datosCompra)
       }
     }
   }

@@ -8,8 +8,6 @@ export default {
   },
   getFuncionarios: (state) => {
     try {
-      // eslint-disable-next-line
-      console.log(state.listaFuncionarios)
       return state.listaFuncionarios
     } catch (e) {
       alert('Error en sistema ' +

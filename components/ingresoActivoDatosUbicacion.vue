@@ -104,9 +104,9 @@
       </v-btn>
       <v-btn
         class="mr-4"
-        @click="submit"
+        @click="grabaDatos"
       >
-        Enviar
+        Grabar
       </v-btn>
     </v-card-actions>
   </div>
@@ -129,7 +129,9 @@ export default {
       funcionario: 'getFuncionarioSeleccionado'
     }),
     nombreFuncionario () {
-      return this.funcionario.nombre + ' ' + this.funcionario.apellido
+      if (this.funcionario.nombre !== undefined) { return this.funcionario.nombre + ' ' + this.funcionario.apellido } else {
+        return ''
+      }
     }
   },
   methods: {
@@ -146,11 +148,8 @@ export default {
       this.buscar = ''
       this.ubicacion = ''
     },
-    async submit () {
-      alert(this.nombreempresa)
-      await this.grabaFuncionario(
-        { nombreempresa: this.nombreempresa, rut: this.rut, ordencompra: this.ordencompra, factura: this.factura, tipo: this.select })
-      this.$router.push('/activos')
+    grabaDatos () {
+      this.$emit('graba-datos', this.ubicacion)
     }
   }
 }

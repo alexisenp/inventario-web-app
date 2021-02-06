@@ -51,6 +51,10 @@ export default {
   methods: {
     clicked (value) {
       this.$store.dispatch('actionSetFuncionarioSeleccionado', value)
+      // eslint-disable-next-line
+      console.log('DATOS FUNCIONARIO SELECCIONADO')
+      // eslint-disable-next-line
+      console.log(value)
       this.$emit('cierra-dialogo')
     }
   }

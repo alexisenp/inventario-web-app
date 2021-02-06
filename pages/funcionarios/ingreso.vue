@@ -203,10 +203,7 @@ export default {
           { nombre: this.nombre, apellido: this.apellido, rut: this.rut, email: this.email, departamento: this.dptoSeleccionado, seccion: this.seccionSeleccionada })) {
           this.$router.push('/funcionarios')
         }
-      } /* else {
-        // eslint-disable-next-line
-        console.log('slasdlksd')
-      } */
+      }
     },
     clear () {
       this.$v.$reset()

@@ -32,15 +32,15 @@
 
           <v-stepper-items>
             <v-stepper-content step="1">
-              <cmp-datos-compra @avanza-stepper="avanzaStepper" />
+              <cmp-datos-compra @avanza-stepper="avanzaStepperDatosCompra" />
             </v-stepper-content>
 
             <v-stepper-content step="2">
-              <cmp-datos-activo @retrocede-stepper="retrocedeStepper" @avanza-stepper="avanzaStepper" />
+              <cmp-datos-activo @retrocede-stepper="retrocedeStepper" @avanza-stepper="avanzaStepperDatosActivo" />
             </v-stepper-content>
 
             <v-stepper-content step="3">
-              <cmp-datos-ubicacion @retrocede-stepper="retrocedeStepper" />
+              <cmp-datos-ubicacion @retrocede-stepper="retrocedeStepper" @graba-datos="grabaDatos" />
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
@@ -72,7 +72,9 @@ export default {
       'Jurídico',
       'Técnico',
       'Dirección'
-    ]
+    ],
+    datosCompra: {},
+    activos: []
   }),
   computed: {
     selectErrors () {
@@ -89,22 +91,24 @@ export default {
   },
   methods: {
     ...mapActions([
-      'grabaFuncionario'
+      'grabaDatosCompra',
+      'grabaActivo'
     ]),
-    avanzaStepper () {
-      // validar que se haya ingresado al menos un activo antes de continuar
+    avanzaStepperDatosCompra (compra) {
+      this.datosCompra = compra
+      this.e1 += 1
+    },
+    avanzaStepperDatosActivo (activos) {
+      this.activos = activos
       this.e1 += 1
     },
     retrocedeStepper () {
       // validar que se haya ingresado al menos un activo antes de continuar
       this.e1 -= 1
+    },
+    async grabaDatos (ubicacion) {
+      if (await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos: this.activos, ubicacion })) { alert('datos guardados correctamente') } else { alert('error al guardar datos') }
     }
-  },
-  save (date) {
-    this.$refs.menu.save(date)
-  },
-  guardar (dateactivacion) {
-    this.$refs.menu.save(dateactivacion)
   },
   // eslint-disable-next-line
   components: {

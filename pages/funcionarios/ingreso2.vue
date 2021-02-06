@@ -118,10 +118,7 @@ export default {
           this.loading = !this.loading
           this.$router.push('/funcionarios')
         }, 2000)
-      } /* else {
-        // eslint-disable-next-line
-        console.log('slasdlksd')
-      } */
+      }
     },
     clear () {
       this.$v.$reset()

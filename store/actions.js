@@ -65,7 +65,7 @@ export default {
         const funcionarios = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const funcionario = { nombre: doc.data().nombre, apellido: doc.data().apellido, rut: doc.data().rut, email: doc.data().email, departamento: doc.data().departamento, seccion: doc.data().seccion }
+          const funcionario = { id: doc.id, nombre: doc.data().nombre, apellido: doc.data().apellido, rut: doc.data().rut, email: doc.data().email, departamento: doc.data().departamento, seccion: doc.data().seccion }
           funcionarios.push(funcionario)
         })
         commit('llenaListaFuncionarios', funcionarios)
@@ -75,6 +75,31 @@ export default {
       alert('Error en sistema ' +
         e)
       // retur
+    }
+  },
+  async grabaDatosCompra ({ dispatch, commit, getters }, payload) {
+    const messageRef = this.$fire.firestore.collection('datoscompra').doc()
+    const activoRef = this.$fire.firestore.collection('activo').doc()
+    try {
+      await messageRef.set({
+        nombreE: payload.datoscompra.nombreE, rutE: payload.datoscompra.rutE, oc: payload.datoscompra.oc, fact: payload.datoscompra.fact, ffact: payload.datoscompra.ffact
+      })
+      await payload.activos.forEach(async function (activo) {
+        // OBTENER ID, activoRef.id
+        await activoRef.set({
+          nombre: activo.nombre,
+          serie: activo.serie,
+          tipo: activo.tipo,
+          valor: activo.valor,
+          desc: activo.desc,
+          funcionario: { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido },
+          ubicacion: payload.ubicacion
+        })
+      })
+      return true
+    } catch (e) {
+      alert('Ha ocurrido un error al grabar los datos de compra del activo. \n El siguiente es el error devuelto por el sistema, este sera util para que los programadores identifiquen el problema: \n ' + e)
+      return false
     }
   },
   actionSetLoading ({ commit }, loading) {

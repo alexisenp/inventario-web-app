@@ -220,7 +220,7 @@ export default {
     agregarActivo () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        const activo = { key: this.activos.length + 1, nombre: this.nombreactivo, serie: this.nserie, tipo: this.tipo, valor: this.valor, descripcion: this.descripcion }
+        const activo = { key: this.activos.length + 1, nombre: this.nombreactivo, serie: this.nserie, tipo: this.tipo, valor: this.valor, desc: this.descripcion }
         this.activos.push(activo)
         this.clear()
       }
@@ -238,7 +238,12 @@ export default {
     },
     continuar () {
       if (this.activos.length > 0) {
-        this.$emit('avanza-stepper')
+        const nuevoArrayActivos = []
+        this.activos.forEach((arrayItem) => {
+          const activo = { nombre: arrayItem.nombre, serie: arrayItem.serie, tipo: arrayItem.tipo, valor: arrayItem.valor, desc: arrayItem.desc }
+          nuevoArrayActivos.push(activo)
+        })
+        this.$emit('avanza-stepper', nuevoArrayActivos)
       } else {
         alert('Debe ingresar al menos un activo para continuar.')
       }
