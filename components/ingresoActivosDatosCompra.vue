@@ -7,7 +7,7 @@
             <p class="title">
               Proveedor
             </p>
-            <v-row align="center">
+            <v-row align="center" class="mx-4">
               <v-col class="d-flex" cols="12" sm="6">
                 <v-text-field
                   v-model="nombreempresa"
@@ -32,18 +32,8 @@
             <p class="title">
               Datos de compra
             </p>
-            <v-row align="center">
-              <v-col class="d-flex" cols="12" sm="4">
-                <v-text-field
-                  v-model="ordencompra"
-                  :error-messages="ordencompraErrors"
-                  label="Orden de Compra"
-                  required
-                  @input="$v.ordencompra.$touch()"
-                  @blur="$v.ordencompra.$touch()"
-                />
-              </v-col>
-              <v-col class="d-flex" cols="12" sm="4">
+            <v-row align="center" class="mx-4">
+              <v-col class="d-flex" cols="12" sm="3">
                 <v-text-field
                   v-model="factura"
                   :error-messages="facturaErrors"
@@ -53,29 +43,53 @@
                   @blur="$v.factura.$touch()"
                 />
               </v-col>
-              <v-menu
-                v-model="menu2"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+              <v-col class="d-flex" cols="12" sm="3">
+                <v-menu
+                  v-model="menu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="computedDateFormatted"
+                      label="Fecha factura"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </template>
+                  <v-date-picker
                     v-model="date"
-                    label="Fecha factura"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
+                    locale="es-es"
+                    @input="menu2 = false"
                   />
-                </template>
-                <v-date-picker
-                  v-model="date"
-                  @input="menu2 = false"
+                </v-menu>
+              </v-col>
+              <v-col class="d-flex" cols="12" sm="3">
+                <v-text-field
+                  v-model="ordencompra"
+                  :error-messages="ordencompraErrors"
+                  label="Orden de Compra"
+                  required
+                  @input="$v.ordencompra.$touch()"
+                  @blur="$v.ordencompra.$touch()"
                 />
-              </v-menu>
+              </v-col>
+
+              <v-col class="d-flex" cols="12" sm="3">
+                <v-text-field
+                  v-model="totalFactura"
+                  :error-messages="totalFacturaErrors"
+                  label="Total"
+                  required
+                  @input="$v.totalFactura.$touch()"
+                  @blur="$v.totalFactura.$touch()"
+                />
+              </v-col>
             </v-row>
           </form>
         </v-card-text>
@@ -102,7 +116,8 @@ export default {
     nombreempresa: { required, minLength: minLength(10) },
     rut: { required, minLength: minLength(10) },
     ordencompra: { required },
-    factura: { required }
+    factura: { required },
+    totalFactura: { required }
     // fechafactura: { required }
   },
   data: () => ({
@@ -110,12 +125,16 @@ export default {
     rut: '',
     ordencompra: '',
     factura: '',
+    totalFactura: '',
     // fechafactura: '',
     date: new Date().toISOString().substr(0, 10),
     menu: false,
     menu2: false
   }),
   computed: {
+    computedDateFormatted () {
+      return this.formatDate(this.date)
+    },
     nombreempresaErrors () {
       const errors = []
       if (!this.$v.nombreempresa.$dirty) { return errors }
@@ -127,19 +146,25 @@ export default {
       const errors = []
       if (!this.$v.rut.$dirty) { return errors }
       !this.$v.rut.minLength && errors.push('El rut debe ser al menos de 10 caracteres')
-      !this.$v.rut.required && errors.push('El rut es obligatoria.')
+      !this.$v.rut.required && errors.push('Ingrese el rut de la empresa.')
       return errors
     },
     ordencompraErrors () {
       const errors = []
       if (!this.$v.ordencompra.$dirty) { return errors }
-      !this.$v.ordencompra.required && errors.push('La Orden de Compra es requerida')
+      !this.$v.ordencompra.required && errors.push('Ingrese el nro de la Orden de compra')
       return errors
     },
     facturaErrors () {
       const errors = []
       if (!this.$v.factura.$dirty) { return errors }
-      !this.$v.factura.required && errors.push('La Factura es obligatoria.')
+      !this.$v.factura.required && errors.push('Ingrese el nro de la factura.')
+      return errors
+    },
+    totalFacturaErrors () {
+      const errors = []
+      if (!this.$v.totalFactura.$dirty) { return errors }
+      !this.$v.totalFactura.required && errors.push('Ingrese el total de la factura.')
       return errors
     }
     /*,
@@ -154,9 +179,14 @@ export default {
     continuar () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        const datosCompra = { nombreE: this.nombreempresa, rutE: this.rut, oc: this.ordencompra, fact: this.factura, ffact: this.date }
+        const datosCompra = { nombreE: this.nombreempresa, rutE: this.rut, oc: this.ordencompra, fact: this.factura, ffact: this.date, total: this.totalFactura }
         this.$emit('avanza-stepper', datosCompra)
       }
+    },
+    formatDate (date) {
+      if (!date) { return null }
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
     }
   }
 }

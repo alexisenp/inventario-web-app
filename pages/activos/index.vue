@@ -1,12 +1,12 @@
 <template>
   <v-container fill-height fluid>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="8" class="headline">
+      <v-col cols="12" sm="8" class="headline">
         Lista de activos
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="8">
+      <v-col cols="12" sm="8">
         <v-btn
           class="mx-2"
           fab
@@ -22,10 +22,10 @@
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="8">
+      <v-col cols="12" sm="11">
         <v-card>
           <v-card-text>
-            <cmp-table-funcionarios />
+            <cmp-table-activos />
           </v-card-text>
         </v-card>
       </v-col>
@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import cmpTableFuncionarios from '@/components/tableFuncionarios'
+import cmpTableActivos from '@/components/tableActivos'
 export default {
   components: {
-    cmpTableFuncionarios
+    cmpTableActivos
   }
 }
 </script>

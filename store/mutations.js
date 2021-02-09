@@ -22,6 +22,9 @@ export default {
   llenaListaFuncionarios (state, payload) {
     state.listaFuncionarios = payload
   },
+  llenaListaActivos (state, payload) {
+    state.listaActivos = payload
+  },
   commitSetLoading (state, payload) {
     state.loading = payload
   },

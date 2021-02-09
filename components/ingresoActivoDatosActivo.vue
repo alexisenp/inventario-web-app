@@ -4,16 +4,18 @@
       <v-card-text>
         <form class="ma-5">
           <v-row align="center">
-            <v-col class="d-flex" cols="12" sm="6">
+            <v-col class="d-flex" cols="12">
               <v-text-field
                 v-model="nombreactivo"
                 :error-messages="nombreactivoErrors"
-                label="Nombre del activo"
+                label="Activo"
                 required
                 @input="$v.nombreactivo.$touch()"
                 @blur="$v.nombreactivo.$touch()"
               />
             </v-col>
+          </v-row>
+          <v-row align="center">
             <v-col class="d-flex" cols="12" sm="6">
               <v-text-field
                 v-model="nserie"
@@ -24,14 +26,24 @@
                 @blur="$v.nserie.$touch()"
               />
             </v-col>
+            <v-col class="d-flex" cols="12" sm="6">
+              <v-text-field
+                v-model="nInventario"
+                :error-messages="nInventarioErrors"
+                label="N° Inventario"
+                required
+                @input="$v.nInventario.$touch()"
+                @blur="$v.nInventario.$touch()"
+              />
+            </v-col>
           </v-row>
           <v-row align="center">
             <v-col class="d-flex" cols="12" sm="6">
-              <v-text-field
+              <v-select
                 v-model="tipo"
                 :error-messages="tipoErrors"
+                :items="tiposActivo"
                 label="Tipo"
-                required
                 @input="$v.tipo.$touch()"
                 @blur="$v.tipo.$touch()"
               />
@@ -104,6 +116,7 @@
                 v-for="item in activos"
                 :key="item.key"
               >
+                <td>{{ item.nInventario }}</td>
                 <td>{{ item.nombre }}</td>
                 <td>{{ item.serie }}</td>
                 <td>{{ item.valor }}</td>
@@ -154,6 +167,7 @@ export default {
   validations: {
     nombreactivo: { required, minLength: minLength(10) },
     nserie: { required },
+    nInventario: { required },
     tipo: { required },
     valor: { required },
     descripcion: { required }
@@ -161,6 +175,8 @@ export default {
   data: () => ({
     nombreactivo: '',
     nserie: '',
+    nInventario: '',
+    tiposActivo: ['Edificaciones', 'Maquinarias y equipos', 'Vehículo', 'Muebles y enseres', 'Equipos computacionales'],
     tipo: '',
     valor: '',
     descripcion: '',
@@ -182,6 +198,12 @@ export default {
       const errors = []
       if (!this.$v.nserie.$dirty) { return errors }
       !this.$v.nserie.required && errors.push('El N° de Serie es obligatorio.')
+      return errors
+    },
+    nInventarioErrors () {
+      const errors = []
+      if (!this.$v.nInventario.$dirty) { return errors }
+      !this.$v.nInventario.required && errors.push('El N° de Inventario es obligatorio.')
       return errors
     },
     tipoErrors () {
@@ -213,6 +235,7 @@ export default {
       this.$v.$reset()
       this.nombreactivo = ''
       this.nserie = ''
+      this.nInventario = ''
       this.tipo = ''
       this.valor = ''
       this.descripcion = ''
@@ -220,7 +243,7 @@ export default {
     agregarActivo () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        const activo = { key: this.activos.length + 1, nombre: this.nombreactivo, serie: this.nserie, tipo: this.tipo, valor: this.valor, desc: this.descripcion }
+        const activo = { key: this.activos.length + 1, nombre: this.nombreactivo, serie: this.nserie, inventario: this.nInventario, tipo: this.tipo, valor: this.valor, desc: this.descripcion }
         this.activos.push(activo)
         this.clear()
       }
@@ -240,7 +263,7 @@ export default {
       if (this.activos.length > 0) {
         const nuevoArrayActivos = []
         this.activos.forEach((arrayItem) => {
-          const activo = { nombre: arrayItem.nombre, serie: arrayItem.serie, tipo: arrayItem.tipo, valor: arrayItem.valor, desc: arrayItem.desc }
+          const activo = { nombre: arrayItem.nombre, serie: arrayItem.serie, inventario: arrayItem.inventario, tipo: arrayItem.tipo, valor: arrayItem.valor, desc: arrayItem.desc }
           nuevoArrayActivos.push(activo)
         })
         this.$emit('avanza-stepper', nuevoArrayActivos)

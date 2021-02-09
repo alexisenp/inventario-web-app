@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default {
 
   async onAuthStateChanged ({ commit, dispatch }, { authUser, claims }) {
@@ -77,16 +78,36 @@ export default {
       // retur
     }
   },
-  async grabaDatosCompra ({ dispatch, commit, getters }, payload) {
-    const messageRef = this.$fire.firestore.collection('datoscompra').doc()
-    const activoRef = this.$fire.firestore.collection('activo').doc()
+  cargaActivos ({ commit }) {
     try {
-      await messageRef.set({
+      commit('commitSetLoading', true)
+      this.$fire.firestore.collection('activo').get().then((querySnapshot) => {
+        const activos = []
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          const activo = { nombre: doc.data().nombre, serie: doc.data().serie, tipo: doc.data().tipo, valor: doc.data().valor, desc: doc.data().desc }
+          activos.push(activo)
+        })
+        commit('llenaListaActivos', activos)
+        commit('commitSetLoading', false)
+      })
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+      // retur
+    }
+  },
+  async grabaDatosCompra ({ dispatch, commit, getters }, payload) {
+    const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
+    await this.$fire.firestore.runTransaction((transaction) => {
+      transaction.set(datosCompraRef, {
         nombreE: payload.datoscompra.nombreE, rutE: payload.datoscompra.rutE, oc: payload.datoscompra.oc, fact: payload.datoscompra.fact, ffact: payload.datoscompra.ffact
       })
-      await payload.activos.forEach(async function (activo) {
+      payload.activos.forEach((activo) => {
+        const activoRef = this.$fire.firestore.collection('activo').doc()
         // OBTENER ID, activoRef.id
-        await activoRef.set({
+        transaction.set(activoRef,{
+          // nInv: this.$fire.firestore.FieldValue.increment(1),
           nombre: activo.nombre,
           serie: activo.serie,
           tipo: activo.tipo,
@@ -95,6 +116,38 @@ export default {
           funcionario: { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido },
           ubicacion: payload.ubicacion
         })
+      })
+      return Promise.resolve(); 
+    }).then(() => {
+      console.log('Transaction successfully committed!')
+      return true;
+    }).catch((error) => {
+      console.log('Transaction failed: ', error)
+      return false;
+    })
+  },
+  async grabaDatosCompra2 ({ dispatch, commit, getters }, payload) {
+    const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
+    const activoRef = this.$fire.firestore.collection('activo').doc()
+    try {
+      await datosCompraRef.set({
+        nombreE: payload.datoscompra.nombreE, rutE: payload.datoscompra.rutE, oc: payload.datoscompra.oc, fact: payload.datoscompra.fact, ffact: payload.datoscompra.ffact
+      })
+      await payload.activos.forEach(async function (activo) {
+        // OBTENER ID, activoRef.id
+        // eslint-disable-next-line
+        console.log(activo.nombre)
+        await activoRef.set({
+          // nInv: this.$fire.firestore.FieldValue.increment(1),
+          nombre: activo.nombre,
+          serie: activo.serie,
+          tipo: activo.tipo,
+          valor: activo.valor,
+          desc: activo.desc,
+          funcionario: { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido },
+          ubicacion: payload.ubicacion
+        })
+        alert('termino el insert')
       })
       return true
     } catch (e) {

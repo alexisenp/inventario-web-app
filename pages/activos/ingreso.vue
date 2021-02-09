@@ -107,7 +107,11 @@ export default {
       this.e1 -= 1
     },
     async grabaDatos (ubicacion) {
-      if (await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos: this.activos, ubicacion })) { alert('datos guardados correctamente') } else { alert('error al guardar datos') }
+      if (await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos: this.activos, ubicacion })) {
+        alert('Datos guardados correctamente.')
+      } else {
+        alert('Ocurrio un error al guardar los datos.')
+      }
     }
   },
   // eslint-disable-next-line

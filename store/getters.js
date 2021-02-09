@@ -15,6 +15,15 @@ export default {
       // return
     }
   },
+  getActivos: (state) => {
+    try {
+      return state.listaActivos
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+      // return
+    }
+  },
   getLoading: (state) => {
     try {
       return state.loading
