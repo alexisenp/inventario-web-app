@@ -85,7 +85,7 @@ export default {
         const activos = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const activo = { nombre: doc.data().nombre, serie: doc.data().serie, tipo: doc.data().tipo, valor: doc.data().valor, desc: doc.data().desc }
+          const activo = { nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, desc: doc.data().desc }
           activos.push(activo)
         })
         commit('llenaListaActivos', activos)
@@ -99,9 +99,9 @@ export default {
   },
   async grabaDatosCompra ({ dispatch, commit, getters }, payload) {
     const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
-    await this.$fire.firestore.runTransaction((transaction) => {
+    return await this.$fire.firestore.runTransaction((transaction) => {
       transaction.set(datosCompraRef, {
-        nombreE: payload.datoscompra.nombreE, rutE: payload.datoscompra.rutE, oc: payload.datoscompra.oc, fact: payload.datoscompra.fact, ffact: payload.datoscompra.ffact
+        nombreE: payload.datoscompra.nombreE, rutE: payload.datoscompra.rutE, oc: payload.datoscompra.oc, fact: payload.datoscompra.fact, ffact: payload.datoscompra.ffact, total: payload.datoscompra.total
       })
       payload.activos.forEach((activo) => {
         const activoRef = this.$fire.firestore.collection('activo').doc()
@@ -110,20 +110,21 @@ export default {
           // nInv: this.$fire.firestore.FieldValue.increment(1),
           nombre: activo.nombre,
           serie: activo.serie,
+          inventario: activo.inventario,
           tipo: activo.tipo,
           valor: activo.valor,
           desc: activo.desc,
           funcionario: { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido },
-          ubicacion: payload.ubicacion
+          ubicacion: payload.ubicacion,
+          dc: datosCompraRef.id
         })
       })
-      return Promise.resolve(); 
+      return Promise.resolve(true);
     }).then(() => {
-      console.log('Transaction successfully committed!')
-      return true;
+      return Promise.resolve();
     }).catch((error) => {
-      console.log('Transaction failed: ', error)
-      return false;
+      console.log(error)
+      return Promise.reject(error);
     })
   },
   async grabaDatosCompra2 ({ dispatch, commit, getters }, payload) {

@@ -22,12 +22,8 @@ export default {
   data () {
     return {
       headers: [
-        {
-          text: 'Activo',
-          align: 'start',
-          sortable: false,
-          value: 'nombre'
-        },
+        { text: 'N°Inventario', value: 'inventario', sortable: false },
+        { text: 'Activo', value: 'nombre', sortable: false },
         { text: 'Tipo', value: 'tipo', sortable: false },
         { text: 'Descripcion', value: 'desc' }
       ]

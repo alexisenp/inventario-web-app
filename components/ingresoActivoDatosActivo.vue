@@ -116,7 +116,7 @@
                 v-for="item in activos"
                 :key="item.key"
               >
-                <td>{{ item.nInventario }}</td>
+                <td>{{ item.inventario }}</td>
                 <td>{{ item.nombre }}</td>
                 <td>{{ item.serie }}</td>
                 <td>{{ item.valor }}</td>
