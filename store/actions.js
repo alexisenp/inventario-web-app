@@ -106,7 +106,7 @@ export default {
       payload.activos.forEach((activo) => {
         const activoRef = this.$fire.firestore.collection('activo').doc()
         // OBTENER ID, activoRef.id
-        transaction.set(activoRef,{
+        const datosAGrabar = {
           // nInv: this.$fire.firestore.FieldValue.increment(1),
           nombre: activo.nombre,
           serie: activo.serie,
@@ -114,10 +114,12 @@ export default {
           tipo: activo.tipo,
           valor: activo.valor,
           desc: activo.desc,
-          funcionario: { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido },
           ubicacion: payload.ubicacion,
           dc: datosCompraRef.id
-        })
+        }
+        if (getters.getFuncionarioSeleccionado.id)
+          datosAGrabar.funcionario = { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido }
+        transaction.set(activoRef, datosAGrabar)
       })
       return Promise.resolve(true);
     }).then(() => {

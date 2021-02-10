@@ -63,11 +63,7 @@
             <v-col class="d-flex" cols="12" sm="12">
               <v-text-field
                 v-model="descripcion"
-                :error-messages="descripcionErrors"
                 label="Descripcion"
-                required
-                @input="$v.descripcion.$touch()"
-                @blur="$v.descripcion.$touch()"
               />
             </v-col>
           </v-row>
@@ -169,8 +165,7 @@ export default {
     nserie: { required },
     nInventario: { required },
     tipo: { required },
-    valor: { required },
-    descripcion: { required }
+    valor: { required }
   },
   data: () => ({
     nombreactivo: '',
@@ -210,12 +205,6 @@ export default {
       const errors = []
       if (!this.$v.tipo.$dirty) { return errors }
       !this.$v.tipo.required && errors.push('El tipo es obligatorio.')
-      return errors
-    },
-    descripcionErrors () {
-      const errors = []
-      if (!this.$v.descripcion.$dirty) { return errors }
-      !this.$v.descripcion.required && errors.push('La descripcion es obligatoria.')
       return errors
     },
     valorErrors () {

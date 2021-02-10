@@ -107,11 +107,14 @@ export default {
       this.e1 -= 1
     },
     async grabaDatos (ubicacion) {
+      this.$store.dispatch('actionSetLoading', true)
       await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos: this.activos, ubicacion }).then(() => {
         alert('Datos guardados correctamente')
+        this.$store.dispatch('actionSetLoading', true)
         this.$router.push('/activos')
       }).catch((error) => {
         alert('Ha ocurrido un error, los datos no se han guardado. \n' + error)
+        this.$store.dispatch('actionSetLoading', false)
       })
     }
   },

@@ -104,6 +104,7 @@
       </v-btn>
       <v-btn
         class="mr-4"
+        :loading="loading"
         @click="grabaDatos"
       >
         Grabar
@@ -126,7 +127,8 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      funcionario: 'getFuncionarioSeleccionado'
+      funcionario: 'getFuncionarioSeleccionado',
+      loading: 'getLoading'
     }),
     nombreFuncionario () {
       if (this.funcionario.nombre !== undefined) { return this.funcionario.nombre + ' ' + this.funcionario.apellido } else {

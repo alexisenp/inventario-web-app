@@ -14,8 +14,9 @@
           <v-spacer />
           <v-btn
             color="primary"
+            :loading="loading"
             nuxt
-            to="/inspire"
+            @click="loading = !loading"
           >
             Continue
           </v-btn>
@@ -30,6 +31,9 @@ import cmpFichaInventario from '@/components/fichaInventario'
 export default {
   components: {
     cmpFichaInventario
-  }
+  },
+  data: () => ({
+    loading: false
+  })
 }
 </script>
