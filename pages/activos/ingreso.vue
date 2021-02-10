@@ -46,6 +46,7 @@
         </v-stepper>
       </v-col>
     </v-row>
+    <cmp-confirm-dialog ref="confirm" />
   </v-container>
 </template>
 
@@ -56,6 +57,7 @@ import { mapActions } from 'vuex'
 import CmpDatosCompra from '@/components/ingresoActivosDatosCompra'
 import CmpDatosActivo from '@/components/ingresoActivoDatosActivo'
 import CmpDatosUbicacion from '@/components/ingresoActivoDatosUbicacion'
+import CmpConfirmDialog from '@/components/confirmDialog'
 
 export default {
   mixins: [validationMixin],
@@ -108,9 +110,12 @@ export default {
     },
     async grabaDatos (ubicacion) {
       this.$store.dispatch('actionSetLoading', true)
-      await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos: this.activos, ubicacion }).then(() => {
+      await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos: this.activos, ubicacion }).then(async () => {
         alert('Datos guardados correctamente')
         this.$store.dispatch('actionSetLoading', true)
+        if (await this.$refs.confirm.open('Confirm', 'Are you sure you want to delete this record?')) {
+          alert('SI QUIERE ELIMINAR')
+        }
         this.$router.push('/activos')
       }).catch((error) => {
         alert('Ha ocurrido un error, los datos no se han guardado. \n' + error)
@@ -122,7 +127,8 @@ export default {
   components: {
     CmpDatosCompra,
     CmpDatosActivo,
-    CmpDatosUbicacion
+    CmpDatosUbicacion,
+    CmpConfirmDialog
   }
 }
 </script>
