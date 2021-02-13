@@ -22,6 +22,9 @@ export default {
   llenaListaFuncionarios (state, payload) {
     state.listaFuncionarios = payload
   },
+  llenaListaAltas (state, payload) {
+    state.listaAltas = payload
+  },
   llenaListaActivos (state, payload) {
     state.listaActivos = payload
   },
@@ -30,5 +33,8 @@ export default {
   },
   commitSetFuncionarioSeleccionado (state, payload) {
     state.funcionarioSeleccionado = payload
+  },
+  commitSetAltaSeleccionada (state, payload) {
+    state.altaSeleccionada = payload
   }
 }

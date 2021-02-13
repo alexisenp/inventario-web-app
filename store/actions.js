@@ -78,6 +78,25 @@ export default {
       // retur
     }
   },
+  cargaAltas ({ commit }) {
+    try {
+      commit('commitSetLoading', true)
+      this.$fire.firestore.collection('altas').get().then((querySnapshot) => {
+        const altas = []
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          const alta = { id: doc.id, numero: doc.data().numero, fecha: doc.data().fecha, activos: doc.data().activos, firmantes: doc.data().firmantes}
+          altas.push(alta)
+        })
+        commit('llenaListaAltas', altas)
+        commit('commitSetLoading', false)
+      })
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+      // retur
+    }
+  },
   cargaActivos ({ commit }) {
     try {
       commit('commitSetLoading', true)
@@ -169,6 +188,14 @@ export default {
   actionSetFuncionarioSeleccionado ({ commit }, payload) {
     try {
       commit('commitSetFuncionarioSeleccionado', payload)
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+    }
+  },
+  actionSetAltaSeleccionada ({ commit }, payload) {
+    try {
+      commit('commitSetAltaSeleccionada', payload)
     } catch (e) {
       alert('Error en sistema ' +
         e)

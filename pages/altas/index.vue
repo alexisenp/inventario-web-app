@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import cmpTableFuncionarios from '@/pages/funcionarios/components/tableFuncionarios'
+import cmpTableFuncionarios from '@/pages/altas/components/tableAltas'
 export default {
   components: {
     cmpTableFuncionarios
