@@ -47,6 +47,7 @@
       </v-col>
     </v-row>
     <cmp-confirm-dialog ref="confirm" />
+    <cmp-ficha-alta ref="fichaAlta" />
   </v-container>
 </template>
 
@@ -58,6 +59,7 @@ import CmpDatosCompra from '@/components/ingresoActivosDatosCompra'
 import CmpDatosActivo from '@/components/ingresoActivoDatosActivo'
 import CmpDatosUbicacion from '@/components/ingresoActivoDatosUbicacion'
 import CmpConfirmDialog from '@/components/confirmDialog'
+import cmpFichaAlta from '@/components/fichaAlta'
 
 export default {
   mixins: [validationMixin],
@@ -112,10 +114,10 @@ export default {
       this.$store.dispatch('actionSetLoading', true)
       await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos: this.activos, ubicacion }).then(async () => {
         alert('Datos guardados correctamente')
-        this.$store.dispatch('actionSetLoading', true)
-        if (await this.$refs.confirm.open('Confirm', 'Are you sure you want to delete this record?')) {
-          alert('SI QUIERE ELIMINAR')
+        if (await this.$refs.confirm.open('Confirmación', '¿ Desea generar el formulario de alta ?')) {
+          await this.$refs.fichaAlta.showDialog(this.activos)
         }
+        this.$store.dispatch('actionSetLoading', false)
         this.$router.push('/activos')
       }).catch((error) => {
         alert('Ha ocurrido un error, los datos no se han guardado. \n' + error)
@@ -128,7 +130,8 @@ export default {
     CmpDatosCompra,
     CmpDatosActivo,
     CmpDatosUbicacion,
-    CmpConfirmDialog
+    CmpConfirmDialog,
+    cmpFichaAlta
   }
 }
 </script>

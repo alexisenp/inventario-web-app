@@ -121,11 +121,11 @@ export default {
     // fechafactura: { required }
   },
   data: () => ({
-    nombreempresa: '',
-    rut: '',
-    ordencompra: '',
-    factura: '',
-    totalFactura: '',
+    nombreempresa: 'NOMBRE EMPRESA DE PRUEBA',
+    rut: '78541214-5',
+    ordencompra: '23',
+    factura: '2323',
+    totalFactura: '1452100',
     // fechafactura: '',
     date: new Date().toISOString().substr(0, 10),
     menu: false,

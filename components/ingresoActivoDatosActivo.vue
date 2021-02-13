@@ -168,12 +168,12 @@ export default {
     valor: { required }
   },
   data: () => ({
-    nombreactivo: '',
-    nserie: '',
-    nInventario: '',
+    nombreactivo: 'NOMBRE ACTIVO DE PRUEBA',
+    nserie: '232323',
+    nInventario: '23',
     tiposActivo: ['Edificaciones', 'Maquinarias y equipos', 'Vehículo', 'Muebles y enseres', 'Equipos computacionales'],
-    tipo: '',
-    valor: '',
+    tipo: 'Maquinarias y equipos',
+    valor: '124000',
     descripcion: '',
     menu2: false,
     date: new Date().toISOString().substr(0, 10),
