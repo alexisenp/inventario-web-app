@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import cmpTableActivos from '@/components/tableActivosFuncionarios'
+import cmpTableActivos from '@/pages/funcionarios/components/tableActivosFuncionarios'
 export default {
   components: {
     cmpTableActivos

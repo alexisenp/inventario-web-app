@@ -55,11 +55,11 @@
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
-import CmpDatosCompra from '@/components/ingresoActivosDatosCompra'
-import CmpDatosActivo from '@/components/ingresoActivoDatosActivo'
-import CmpDatosUbicacion from '@/components/ingresoActivoDatosUbicacion'
+import CmpDatosCompra from '@/pages/activos/components/ingresoActivosDatosCompra'
+import CmpDatosActivo from '@/pages/activos/components/ingresoActivoDatosActivo'
+import CmpDatosUbicacion from '@/pages/activos/components/ingresoActivoDatosUbicacion'
 import CmpConfirmDialog from '@/components/confirmDialog'
-import cmpFichaAlta from '@/components/fichaAlta'
+import cmpFichaAlta from '@/pages/activos/components/fichaAlta'
 
 export default {
   mixins: [validationMixin],

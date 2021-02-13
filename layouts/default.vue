@@ -192,8 +192,8 @@ export default {
         },
         {
           icon: 'mdi-inbox-multiple-outline ',
-          title: 'Opciones',
-          to: '/opciones'
+          title: 'Fichas de alta',
+          to: '/altas'
         }
       ],
       miniVariant: false,

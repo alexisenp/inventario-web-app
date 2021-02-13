@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import cmpFichaInventarioTable from '@/components/fichaInventarioTable'
+import cmpFichaInventarioTable from '@/pages/activos/components/fichaInventarioTable'
 
 export default {
   components: {

@@ -41,7 +41,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import cmpActivos from '@/components/activosFuncionario'
+import cmpActivos from '@/pages/funcionarios/components/activosFuncionario'
 export default {
   components: {
     cmpActivos

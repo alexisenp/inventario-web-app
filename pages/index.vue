@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import cmpFichaInventario from '@/components/fichaInventario'
+import cmpFichaInventario from '@/pages/activos/components/fichaInventario'
 export default {
   components: {
     cmpFichaInventario

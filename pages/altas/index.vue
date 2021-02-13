@@ -2,7 +2,7 @@
   <v-container fill-height fluid>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="8" class="headline">
-        Lista de funcionarios
+        Fichas de alta
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
@@ -13,7 +13,7 @@
           dark
           large
           color="primary"
-          to="/funcionarios/ingreso"
+          to="/altas/ingreso"
         >
           <v-icon dark>
             mdi-plus

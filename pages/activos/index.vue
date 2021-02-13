@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import cmpTableActivos from '@/components/tableActivos'
+import cmpTableActivos from '@/pages/activos/components/tableActivos'
 export default {
   components: {
     cmpTableActivos

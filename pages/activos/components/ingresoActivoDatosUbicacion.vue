@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import cmpTableFuncionarios from '@/components/tableFuncionariosSeleccion'
+import cmpTableFuncionarios from '@/pages/activos/components/tableFuncionariosSeleccion'
 import { mapGetters } from 'vuex'
 export default {
   components: {
