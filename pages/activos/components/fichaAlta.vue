@@ -25,7 +25,7 @@
             <v-btn
               dark
               text
-              @click="generaPdf()"
+              @click="grabaFichaAlta()"
             >
               GENERAR
             </v-btn>
@@ -268,12 +268,6 @@ export default {
       firmantes: 'JCD/JCC/mmr.'
     }
   },
-  computed: {
-    fecha () {
-      const fecha = Date()
-      return fecha.getDate + '/' + fecha.getMonth + '/' + fecha.getFullYear
-    }
-  },
   methods: {
     showDialog (activos) {
       this.dialog = true
@@ -287,16 +281,40 @@ export default {
       this.resolve(true)
       this.dialog = false
     },
-    async generaPdf () {
+    generaPdf () {
+      alert('Genera PDF')
+      this.hideDialog()
+      this.$router.push('/activos')
+    },
+    async grabaFichaAlta () {
+      let flag = true
       if (this.nroResolucion === '') {
-        if (await this.$refs.confirm.open('Confirmación', 'Si continua sin ingresar nro de resolucion el documento se grabará como borrador \n ¿Desea continuar?.')) {
-          alert('Graba y genera PDF')
-          this.hideDialog()
+        if (!await this.$refs.confirm.open('Confirmación', 'Si continua sin ingresar nro de resolucion el documento se grabará como borrador \n ¿Desea continuar?.')) {
+          flag = false
         }
-      } else {
-        alert('Graba y genera PDF')
-        this.hideDialog()
       }
+      if (flag) {
+        const date = this.formatDate(new Date().toISOString().substr(0, 10))
+        const fichaAlta = { numero: 'Borrador', fecha: date, activos: this.activos, firmantes: this.firmantes }
+        if (this.nroResolucion !== '') {
+          alert(this.nroResolucion + ' NRO DE RESOLUCION SETEADO')
+          fichaAlta.numero = this.nroResolucion
+        }
+        this.$store.dispatch('actionSetLoading', true)
+        await this.$store.dispatch('grabaFichaAlta', fichaAlta).then(() => {
+          alert('Datos guardados correctamente')
+          this.$store.dispatch('actionSetLoading', false)
+          this.generaPdf()
+        }).catch((error) => {
+          alert('Ha ocurrido un error, los datos no se han guardado. \n' + error)
+          this.$store.dispatch('actionSetLoading', false)
+        })
+      }
+    },
+    formatDate (date) {
+      if (!date) { return null }
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
     }
   }
 }

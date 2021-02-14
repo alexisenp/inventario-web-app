@@ -20,8 +20,8 @@ export default {
   data () {
     return {
       headers: [
-        { text: 'Numero', value: 'nombre', sortable: false },
-        { text: 'Fecha', value: 'apellido', sortable: false }
+        { text: 'Numero', value: 'numero', sortable: false },
+        { text: 'Fecha', value: 'fecha', sortable: false }
       ]
     }
   },

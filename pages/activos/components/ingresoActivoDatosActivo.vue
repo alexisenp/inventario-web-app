@@ -255,7 +255,7 @@ export default {
           const activo = { nombre: arrayItem.nombre, serie: arrayItem.serie, inventario: arrayItem.inventario, tipo: arrayItem.tipo, valor: arrayItem.valor, desc: arrayItem.desc }
           nuevoArrayActivos.push(activo)
         })
-        this.$emit('avanza-stepper', nuevoArrayActivos)
+        this.$emit('graba-datos', nuevoArrayActivos)
       } else {
         alert('Debe ingresar al menos un activo para continuar.')
       }

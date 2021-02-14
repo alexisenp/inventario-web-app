@@ -179,7 +179,8 @@ export default {
     continuar () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        const datosCompra = { nombreE: this.nombreempresa, rutE: this.rut, oc: this.ordencompra, fact: this.factura, ffact: this.date, total: this.totalFactura }
+        const datefact = this.computedDateFormatted
+        const datosCompra = { nombreE: this.nombreempresa, rutE: this.rut, oc: this.ordencompra, fact: this.factura, ffact: datefact, total: this.totalFactura }
         this.$emit('avanza-stepper', datosCompra)
       }
     },

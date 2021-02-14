@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
 
-  async onAuthStateChanged ({ commit, dispatch }, { authUser, claims }) {
+  async onAuthStateChanged({ commit, dispatch }, { authUser, claims }) {
     if (!authUser) {
       await commit('RESET_STORE')
       return
@@ -19,7 +19,7 @@ export default {
     })
   },
 
-  async nuxtServerInit ({ dispatch, commit }, { res }) {
+  async nuxtServerInit({ dispatch, commit }, { res }) {
     if (res && res.locals && res.locals.user) {
       const { allClaims: claims, idToken: token, ...authUser } = res.locals.user
 
@@ -42,7 +42,7 @@ export default {
     }
   },
 
-  async grabaFuncionario ({ dispatch, commit }, funcionario) {
+  async grabaFuncionario({ dispatch, commit }, funcionario) {
     const messageRef = this.$fire.firestore.collection('funcionario').doc()
     try {
       await messageRef.set({
@@ -59,7 +59,7 @@ export default {
       return false
     }
   },
-  cargaFuncionarios ({ commit }) {
+  cargaFuncionarios({ commit }) {
     try {
       commit('commitSetLoading', true)
       this.$fire.firestore.collection('funcionario').get().then((querySnapshot) => {
@@ -78,14 +78,14 @@ export default {
       // retur
     }
   },
-  cargaAltas ({ commit }) {
+  cargaAltas({ commit }) {
     try {
       commit('commitSetLoading', true)
       this.$fire.firestore.collection('altas').get().then((querySnapshot) => {
         const altas = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const alta = { id: doc.id, numero: doc.data().numero, fecha: doc.data().fecha, activos: doc.data().activos, firmantes: doc.data().firmantes}
+          const alta = { id: doc.id, numero: doc.data().numero, fecha: doc.data().fecha, activos: doc.data().activos, firmantes: doc.data().firmantes }
           altas.push(alta)
         })
         commit('llenaListaAltas', altas)
@@ -97,7 +97,7 @@ export default {
       // retur
     }
   },
-  cargaActivos ({ commit }) {
+  cargaActivos({ commit }) {
     try {
       commit('commitSetLoading', true)
       this.$fire.firestore.collection('activo').get().then((querySnapshot) => {
@@ -116,7 +116,7 @@ export default {
       // retur
     }
   },
-  async grabaDatosCompra ({ dispatch, commit, getters }, payload) {
+  async grabaDatosCompra({ getters }, payload) {
     const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
     return await this.$fire.firestore.runTransaction((transaction) => {
       transaction.set(datosCompraRef, {
@@ -133,14 +133,14 @@ export default {
           tipo: activo.tipo,
           valor: activo.valor,
           desc: activo.desc,
-          ubicacion: payload.ubicacion,
+          // ubicacion: payload.ubicacion,
           dc: datosCompraRef.id
         }
-        if (getters.getFuncionarioSeleccionado.id)
-          datosAGrabar.funcionario = { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido }
+        //if (getters.getFuncionarioSeleccionado.id)
+          // datosAGrabar.funcionario = { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido }
         transaction.set(activoRef, datosAGrabar)
       })
-      return Promise.resolve(true);
+      return Promise.resolve();
     }).then(() => {
       return Promise.resolve();
     }).catch((error) => {
@@ -148,36 +148,23 @@ export default {
       return Promise.reject(error);
     })
   },
-  async grabaDatosCompra2 ({ dispatch, commit, getters }, payload) {
-    const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
-    const activoRef = this.$fire.firestore.collection('activo').doc()
-    try {
-      await datosCompraRef.set({
-        nombreE: payload.datoscompra.nombreE, rutE: payload.datoscompra.rutE, oc: payload.datoscompra.oc, fact: payload.datoscompra.fact, ffact: payload.datoscompra.ffact
+  async grabaFichaAlta({ commit }, payload) {
+    const fichAltaRef = this.$fire.firestore.collection('altas').doc()
+    return await this.$fire.firestore.runTransaction((transaction) => {
+      transaction.set(fichAltaRef, { numero: payload.numero, fecha: payload.fecha, activos: payload.activos, firmantes: payload.firmantes })
+      payload.activos.forEach((activo) => { // traer arrays de activos
+        const activoRef = this.$fire.firestore.collection('activo').doc(activo.id) // indicar id activo
+        transaction.update(activoRef, { fichaalta: fichAltaRef.id })
       })
-      await payload.activos.forEach(async function (activo) {
-        // OBTENER ID, activoRef.id
-        // eslint-disable-next-line
-        console.log(activo.nombre)
-        await activoRef.set({
-          // nInv: this.$fire.firestore.FieldValue.increment(1),
-          nombre: activo.nombre,
-          serie: activo.serie,
-          tipo: activo.tipo,
-          valor: activo.valor,
-          desc: activo.desc,
-          funcionario: { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido },
-          ubicacion: payload.ubicacion
-        })
-        alert('termino el insert')
-      })
-      return true
-    } catch (e) {
-      alert('Ha ocurrido un error al grabar los datos de compra del activo. \n El siguiente es el error devuelto por el sistema, este sera util para que los programadores identifiquen el problema: \n ' + e)
-      return false
-    }
+      return Promise.resolve(true)
+    }).then(() => {
+      return Promise.resolve(true);
+    }).catch((error) => {
+      console.log(error)
+      return Promise.reject(error);
+    })
   },
-  actionSetLoading ({ commit }, loading) {
+  actionSetLoading({ commit }, loading) {
     try {
       commit('commitSetLoading', loading)
     } catch (e) {
@@ -185,7 +172,7 @@ export default {
         e)
     }
   },
-  actionSetFuncionarioSeleccionado ({ commit }, payload) {
+  actionSetFuncionarioSeleccionado({ commit }, payload) {
     try {
       commit('commitSetFuncionarioSeleccionado', payload)
     } catch (e) {
@@ -193,7 +180,7 @@ export default {
         e)
     }
   },
-  actionSetAltaSeleccionada ({ commit }, payload) {
+  actionSetAltaSeleccionada({ commit }, payload) {
     try {
       commit('commitSetAltaSeleccionada', payload)
     } catch (e) {
