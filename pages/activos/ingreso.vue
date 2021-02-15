@@ -48,6 +48,8 @@
     </v-row>
     <cmp-confirm-dialog ref="confirm" />
     <cmp-ficha-alta ref="fichaAlta" />
+    <cmp-loading-overlay />
+    <cmp-normal-dialog ref="myAlert" />
   </v-container>
 </template>
 
@@ -60,6 +62,8 @@ import CmpDatosActivo from '@/pages/activos/components/ingresoActivoDatosActivo'
 // import CmpDatosUbicacion from '@/pages/activos/components/ingresoActivoDatosUbicacion'
 import CmpConfirmDialog from '@/components/confirmDialog'
 import cmpFichaAlta from '@/pages/activos/components/fichaAlta'
+import cmpLoadingOverlay from '@/components/loadingOverlay'
+import cmpNormalDialog from '@/components/normalDialog'
 
 export default {
   components: {
@@ -67,7 +71,9 @@ export default {
     CmpDatosActivo,
     // CmpDatosUbicacion,
     CmpConfirmDialog,
-    cmpFichaAlta
+    cmpFichaAlta,
+    cmpLoadingOverlay,
+    cmpNormalDialog
   },
   mixins: [validationMixin],
 
@@ -116,7 +122,7 @@ export default {
     async grabaDatos (activos) {
       this.$store.dispatch('actionSetLoading', true)
       await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos }).then(async (arrayIdActivos) => {
-        alert('Datos guardados correctamente')
+        // this.$refs.myAlert.open('Confirmacion', 'Datos guardados correctamente')
         if (await this.$refs.confirm.open('Confirmación', '¿ Desea generar el formulario de alta ?')) {
           await this.$refs.fichaAlta.showDialog(arrayIdActivos)
         }

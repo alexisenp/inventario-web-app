@@ -25,7 +25,7 @@
       <v-col cols="12" sm="9" md="9">
         <v-card>
           <v-card-text>
-            <cmp-table-funcionarios />
+            <cmp-table-altas />
           </v-card-text>
         </v-card>
       </v-col>
@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import cmpTableFuncionarios from '@/pages/altas/components/tableAltas'
+import cmpTableAltas from '@/pages/altas/components/tableAltas'
 export default {
   components: {
-    cmpTableFuncionarios
+    cmpTableAltas
   }
 }
 </script>

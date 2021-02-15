@@ -212,15 +212,21 @@
       </v-card>
     </v-dialog>
     <cmp-confirm-dialog ref="confirm" />
+    <cmp-loading-overlay />
+    <cmp-normal-dialog ref="myAlert" />
   </v-row>
 </template>
 
 <script>
 import CmpConfirmDialog from '@/components/confirmDialog'
+import cmpNormalDialog from '@/components/normalDialog'
+import cmpLoadingOverlay from '@/components/loadingOverlay'
 
 export default {
   components: {
-    CmpConfirmDialog
+    CmpConfirmDialog,
+    cmpNormalDialog,
+    cmpLoadingOverlay
   },
   data () {
     return {
@@ -282,7 +288,7 @@ export default {
       this.dialog = false
     },
     generaPdf () {
-      alert('Genera PDF')
+      alert('Genera archivo imprimible')
       this.hideDialog()
       this.$router.push('/activos')
     },
@@ -306,9 +312,9 @@ export default {
         }
         this.$store.dispatch('actionSetLoading', true)
         await this.$store.dispatch('grabaFichaAlta', fichaAlta).then(() => {
-          alert('Datos guardados correctamente')
           this.$store.dispatch('actionSetLoading', false)
           this.generaPdf()
+          this.$refs.myAlert.open('Confirmacion', 'Datos guardados correctamente')
         }).catch((error) => {
           alert('Ha ocurrido un error, los datos no se han guardado. \n' + error)
           this.$store.dispatch('actionSetLoading', false)

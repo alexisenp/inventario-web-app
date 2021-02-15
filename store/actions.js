@@ -158,7 +158,6 @@ export default {
       payload.activos.forEach((activo) => { // traer arrays de activos
         const activoRef = this.$fire.firestore.collection('activo').doc(activo) // indicar id activo
         transaction.update(activoRef, { fichaalta: fichAltaRef.id })
-        console.log(activo)
       })
       return Promise.resolve(true)
     }).then(() => {
