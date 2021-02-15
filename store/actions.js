@@ -156,9 +156,9 @@ export default {
     return await this.$fire.firestore.runTransaction((transaction) => {
       transaction.set(fichAltaRef, { numero: payload.numero, fecha: payload.fecha, activos: payload.activos, firmantes: payload.firmantes })
       payload.activos.forEach((activo) => { // traer arrays de activos
-        const activoRef = this.$fire.firestore.collection('activo').doc(activo.id) // indicar id activo
+        const activoRef = this.$fire.firestore.collection('activo').doc(activo) // indicar id activo
         transaction.update(activoRef, { fichaalta: fichAltaRef.id })
-        console.log(activo.id)
+        console.log(activo)
       })
       return Promise.resolve(true)
     }).then(() => {

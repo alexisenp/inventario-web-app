@@ -295,7 +295,11 @@ export default {
       }
       if (flag) {
         const date = this.formatDate(new Date().toISOString().substr(0, 10))
-        const fichaAlta = { numero: 'Borrador', fecha: date, activos: this.activos, firmantes: this.firmantes }
+        const arrayIdActivos = []
+        for (let i = 0; i < this.activos.length; i++) {
+          arrayIdActivos.push(this.activos[i].id)
+        }
+        const fichaAlta = { numero: 'Borrador', fecha: date, activos: arrayIdActivos, firmantes: this.firmantes }
         if (this.nroResolucion !== '') {
           alert(this.nroResolucion + ' NRO DE RESOLUCION SETEADO')
           fichaAlta.numero = this.nroResolucion
