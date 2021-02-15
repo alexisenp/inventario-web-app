@@ -149,7 +149,7 @@
         color="primary"
         @click="continuar()"
       >
-        Continuar
+        Grabar
       </v-btn>
     </v-card-actions>
   </div>

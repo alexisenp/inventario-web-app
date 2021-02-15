@@ -115,10 +115,10 @@ export default {
     },
     async grabaDatos (activos) {
       this.$store.dispatch('actionSetLoading', true)
-      await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos }).then(async () => {
+      await this.$store.dispatch('grabaDatosCompra', { datoscompra: this.datosCompra, activos }).then(async (arrayIdActivos) => {
         alert('Datos guardados correctamente')
         if (await this.$refs.confirm.open('Confirmación', '¿ Desea generar el formulario de alta ?')) {
-          await this.$refs.fichaAlta.showDialog(this.activos)
+          await this.$refs.fichaAlta.showDialog(arrayIdActivos)
         }
         this.$store.dispatch('actionSetLoading', false)
         this.$router.push('/activos')

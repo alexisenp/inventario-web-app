@@ -261,7 +261,7 @@ export default {
         texto: 'h) Las facultades que me confieren el Decreto Supremo Nº 355 y el Decreto TRA N° 272/12/2019 de fecha 18/03/2019, ambos del MINVU.'
       }
       ],
-      considerandos: [{ id: 1, texto: 'a) La necesidad del Servicio de proceder al alta y asignación de la cámara fotográfica que se indica en la presente Resolución, dicto lo siguiente:' }],
+      considerandos: [{ id: 9, texto: 'a) La necesidad del Servicio de proceder al alta y asignación de la cámara fotográfica que se indica en la presente Resolución, dicto lo siguiente:' }],
       resolucion1: '1. DISPÓNESE el alta en el Servicio de Vivienda y Urbanización Región de Coquimbo, del activo que se indica y asígnese a la unidad que se señala según el siguiente detalle:',
       resolucion2: '2. La Sección Contabilidad y Presupuestos del SERVIU Región de Coquimbo, deberá dar de alta contablemente la especie identificada precedentemente y efectuar los registros respectivos.',
       activos: [],

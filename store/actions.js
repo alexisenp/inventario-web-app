@@ -118,6 +118,7 @@ export default {
   },
   async grabaDatosCompra({ getters }, payload) {
     const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
+    let arrayIdActivos = []
     return await this.$fire.firestore.runTransaction((transaction) => {
       transaction.set(datosCompraRef, {
         nombreE: payload.datoscompra.nombreE, rutE: payload.datoscompra.rutE, oc: payload.datoscompra.oc, fact: payload.datoscompra.fact, ffact: payload.datoscompra.ffact, total: payload.datoscompra.total
@@ -139,10 +140,12 @@ export default {
         //if (getters.getFuncionarioSeleccionado.id)
           // datosAGrabar.funcionario = { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido }
         transaction.set(activoRef, datosAGrabar)
+        datosAGrabar.id = activoRef.id
+        arrayIdActivos.push(datosAGrabar)
       })
-      return Promise.resolve();
+      return Promise.resolve(arrayIdActivos);
     }).then(() => {
-      return Promise.resolve();
+      return Promise.resolve(arrayIdActivos);
     }).catch((error) => {
       console.log(error)
       return Promise.reject(error);
@@ -155,6 +158,7 @@ export default {
       payload.activos.forEach((activo) => { // traer arrays de activos
         const activoRef = this.$fire.firestore.collection('activo').doc(activo.id) // indicar id activo
         transaction.update(activoRef, { fichaalta: fichAltaRef.id })
+        console.log(activo.id)
       })
       return Promise.resolve(true)
     }).then(() => {
