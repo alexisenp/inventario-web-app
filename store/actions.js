@@ -167,6 +167,17 @@ export default {
       return Promise.reject(error);
     })
   },
+  async grabaEdicionFichaAlta ({ commit }, payload) {
+    const fichAltaRef = this.$fire.firestore.collection('altas').doc(payload.id)
+    try {
+      await fichAltaRef.update({numero: payload.numero})
+      return true
+    }catch (error) {
+      return false;
+      alert('Ha ocurrido un error ' + error)
+    }
+   
+  },
   actionSetLoading({ commit }, loading) {
     try {
       commit('commitSetLoading', loading)
