@@ -19,7 +19,7 @@
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
         <transition name="flip">
-          <v-card v-if="!edit" key="1" class="pa-5" transition="slide-x-transition">
+          <v-card v-if="!edit" key="1" class="pa-5">
             <v-card-title class="headline d-flex justify-space-between">
               <div>Ficha Alta</div>
               <div>

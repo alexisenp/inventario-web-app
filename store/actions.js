@@ -179,6 +179,18 @@ export default {
       return Promise.reject(false)
     })
   },
+  async grabaEdicionFuncionario({ commit }, payload) {
+    commit('commitSetLoading', true)
+    const fichAltaRef = this.$fire.firestore.collection('funcionario').doc(payload.id)
+
+    await fichAltaRef.update({ nombre: payload.nombre, apellido: payload.apellido, rut: payload.rut, departamento: payload.departamento, seccion: payload.seccion }).then(() => {
+      commit('commitSetLoading', false)
+      return Promise.resolve(true)
+    }).catch((error) => {
+      alert('Ha ocurrido un error ' + error)
+      return Promise.reject(false)
+    })
+  },
   actionSetLoading({ commit }, loading) {
     try {
       commit('commitSetLoading', loading)
