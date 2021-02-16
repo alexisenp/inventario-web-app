@@ -63,7 +63,7 @@
             <v-col class="d-flex" cols="12" sm="12">
               <v-text-field
                 v-model="descripcion"
-                label="Descripcion"
+                label="Descripción"
               />
             </v-col>
           </v-row>

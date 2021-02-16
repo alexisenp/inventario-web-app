@@ -1,9 +1,5 @@
 <template>
-  <v-expansion-panels
-    v-model="panel"
-    :disabled="disabled"
-    multiple
-  >
+  <v-expansion-panels>
     <v-expansion-panel>
       <v-expansion-panel-header>Activos del funcionario</v-expansion-panel-header>
       <v-expansion-panel-content>
