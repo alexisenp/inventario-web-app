@@ -56,7 +56,7 @@
               <v-row class="d-flex align-center">
                 <v-col>Numero</v-col>
                 <v-col sm="8">
-                  <v-text-field v-model="alta.numero" />
+                  <v-text-field v-model="numeroActual" />
                 </v-col>
               </v-row>
               <v-row class="d-flex align-center">
@@ -72,7 +72,7 @@
                 </v-col>
               </v-row>
             </v-card-text>
-            <v-card-action>
+            <v-card-actions>
               <v-row align="center" justify="space-around" class="mt-4">
                 <v-btn
                   @click="edit= false"
@@ -81,12 +81,13 @@
                 </v-btn>
                 <v-btn
                   class="mr-4"
+                  color="primary"
                   @click="saveData"
                 >
                   Grabar
                 </v-btn>
               </v-row>
-            </v-card-action>
+            </v-card-actions>
           </v-card>
         </transition>
       </v-col>
@@ -96,29 +97,54 @@
         <cmp-alta />
       </v-col>
     </v-row>
+    <cmp-loading-overlay />
+    <cmp-normal-dialog ref="myAlert" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import cmpAlta from '@/pages/altas/components/activosAlta'
+import cmpLoadingOverlay from '@/components/loadingOverlay'
+import cmpNormalDialog from '@/components/normalDialog'
+
 export default {
   components: {
-    cmpAlta
+    cmpAlta,
+    cmpLoadingOverlay,
+    cmpNormalDialog
   },
   data () {
     return {
-      edit: false
+      edit: false,
+      numeroFixLater: ''
     }
   },
   computed: {
     ...mapGetters({
       alta: 'getAltaSeleccionada'
-    })
+    }),
+    numeroActual: {
+      get () {
+        return (this.alta.numero === 'Borrador') ? '' : this.alta.numero
+      },
+      set (value) {
+        this.numeroFixLater = value
+      }
+    }
   },
   methods: {
-    saveData () {
-      this.$store.dispatch('grabaEdicionFichaAlta', { id: this.alta.id, numero: this.alta.numero })
+    async saveData () {
+      const valorNumero = (this.numeroFixLater === '') ? 'Borrador' : this.numeroFixLater
+      await this.$store.dispatch('grabaEdicionFichaAlta', { id: this.alta.id, numero: valorNumero })
+        .then((value) => {
+          this.$refs.myAlert.open('Confirmación', 'Datos guardados correctamente.')
+          this.alta.numero = valorNumero
+          this.edit = false
+        })
+        .catch(() => {
+          this.$refs.myAlert.open('ERROR', 'Error al guardar los datos.')
+        })
     }
   }
 }

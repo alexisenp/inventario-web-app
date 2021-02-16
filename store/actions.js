@@ -138,7 +138,7 @@ export default {
           dc: datosCompraRef.id
         }
         //if (getters.getFuncionarioSeleccionado.id)
-          // datosAGrabar.funcionario = { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido }
+        // datosAGrabar.funcionario = { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido }
         transaction.set(activoRef, datosAGrabar)
         datosAGrabar.id = activoRef.id
         arrayIdActivos.push(datosAGrabar)
@@ -167,16 +167,17 @@ export default {
       return Promise.reject(error);
     })
   },
-  async grabaEdicionFichaAlta ({ commit }, payload) {
+  async grabaEdicionFichaAlta({ commit }, payload) {
+    commit('commitSetLoading', true)
     const fichAltaRef = this.$fire.firestore.collection('altas').doc(payload.id)
-    try {
-      await fichAltaRef.update({numero: payload.numero})
-      return true
-    }catch (error) {
-      return false;
+
+    await fichAltaRef.update({ numero: payload.numero }).then(() => {
+      commit('commitSetLoading', false)
+      return Promise.resolve(true)
+    }).catch((error) => {
       alert('Ha ocurrido un error ' + error)
-    }
-   
+      return Promise.reject(false)
+    })
   },
   actionSetLoading({ commit }, loading) {
     try {
