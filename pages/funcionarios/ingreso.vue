@@ -15,13 +15,9 @@
           </v-icon>
         </v-btn>
       </v-col>
-    </v-row>
-    <v-row justify="center" align="center">
-      <v-row justify="center" align="center">
-        <v-col cols="12" sm="8" md="8" class="headline">
-          Nuevo funcionario
-        </v-col>
-      </v-row>
+      <v-col cols="12" sm="8" md="8" class="headline">
+        Nuevo funcionario
+      </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="8">

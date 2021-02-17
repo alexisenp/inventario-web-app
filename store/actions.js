@@ -104,7 +104,7 @@ export default {
         const activos = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const activo = { nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, desc: doc.data().desc }
+          const activo = { id:doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
           activos.push(activo)
         })
         commit('llenaListaActivos', activos)
@@ -133,7 +133,7 @@ export default {
           inventario: activo.inventario,
           tipo: activo.tipo,
           valor: activo.valor,
-          desc: activo.desc,
+          desc: activo.descripcion,
           // ubicacion: payload.ubicacion,
           dc: datosCompraRef.id
         }
@@ -179,6 +179,17 @@ export default {
       return Promise.reject(false)
     })
   },
+  async grabaEdicionActivo({ commit }, payload) {
+    commit('commitSetLoading', true)
+    const activoRef = this.$fire.firestore.collection('activo').doc(payload.id)
+    await activoRef.update({ nombre: payload.nombre, serie: payload.serie, inventario: payload.inventario, tipo: payload.tipo, valor: payload.valor, desc:payload.descripcion }).then(() => {
+      commit('commitSetLoading', false)
+      return Promise.resolve(true)
+    }).catch((error) => {
+      alert('Ha ocurrido un error ' + error)
+      return Promise.reject(false)
+    })
+  },
   async grabaEdicionFuncionario({ commit }, payload) {
     commit('commitSetLoading', true)
     const fichAltaRef = this.$fire.firestore.collection('funcionario').doc(payload.id)
@@ -202,6 +213,14 @@ export default {
   actionSetFuncionarioSeleccionado({ commit }, payload) {
     try {
       commit('commitSetFuncionarioSeleccionado', payload)
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+    }
+  },
+  actionSetActivoSeleccionado({ commit }, payload) {
+    try {
+      commit('commitSetActivoSeleccionado', payload)
     } catch (e) {
       alert('Error en sistema ' +
         e)

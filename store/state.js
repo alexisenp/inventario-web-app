@@ -5,5 +5,6 @@ export default () => ({
   listaActivos: [],
   loading: true,
   funcionarioSeleccionado: {},
-  altaSeleccionada: {}
+  altaSeleccionada: {},
+  activoSeleccionado: {}
 })

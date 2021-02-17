@@ -34,6 +34,9 @@ export default {
   commitSetFuncionarioSeleccionado (state, payload) {
     state.funcionarioSeleccionado = payload
   },
+  commitSetActivoSeleccionado (state, payload) {
+    state.activoSeleccionado = payload
+  },
   commitSetAltaSeleccionada (state, payload) {
     state.altaSeleccionada = payload
   }

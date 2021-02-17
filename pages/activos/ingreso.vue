@@ -1,11 +1,23 @@
 <template>
   <v-container>
-    <v-row justify="center" align="center">
-      <v-row justify="center" align="center">
-        <v-col cols="12" sm="8" md="8" class="headline my-4">
-          Nuevo activo
-        </v-col>
-      </v-row>
+    <v-row>
+      <v-col>
+        <v-btn
+          fab
+          dark
+          large
+          color="primary"
+          class="ml-8"
+          to="/funcionarios/"
+        >
+          <v-icon dark>
+            mdi-arrow-left
+          </v-icon>
+        </v-btn>
+      </v-col>
+      <v-col cols="12" sm="8" md="8" class="headline my-4">
+        Nuevo activo
+      </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="11" md="11">

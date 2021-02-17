@@ -37,9 +37,8 @@ export default {
   },
   methods: {
     clicked (value) {
-      alert('Activo seleccionado')
-      // this.$store.dispatch('actionSetFuncionarioSeleccionado', value)
-      // this.$router.push('/funcionarios/funcionario')
+      this.$store.dispatch('actionSetActivoSeleccionado', value)
+      this.$router.push('/activos/activo')
     }
   }
 }

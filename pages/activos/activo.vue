@@ -8,7 +8,7 @@
           large
           color="primary"
           class="ml-8"
-          to="/funcionarios/"
+          to="/activos"
         >
           <v-icon dark>
             mdi-arrow-left
@@ -17,11 +17,11 @@
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="8">
         <transition name="flip">
           <v-card v-if="!edit" key="1" class="pa-5">
             <v-card-title class="headline d-flex justify-space-between">
-              <div>Detalle Funcionario</div>
+              <div>Detalle Activo</div>
               <div>
                 <v-btn
                   color="primary"
@@ -35,36 +35,52 @@
             </v-card-title>
             <v-card-text>
               <v-row>
-                <v-col>Nombre</v-col>
-                <v-col>{{ funcionario.nombre }}</v-col>
+                <v-col sm="3">
+                  Activo
+                </v-col>
+                <v-col>{{ activo.nombre }}</v-col>
               </v-row>
               <v-row>
-                <v-col>E-mail</v-col>
-                <v-col>{{ funcionario.email }}</v-col>
+                <v-col sm="3">
+                  Serie
+                </v-col>
+                <v-col>{{ activo.serie }}</v-col>
               </v-row>
               <v-row>
-                <v-col>Rut</v-col>
-                <v-col>{{ funcionario.rut }}</v-col>
+                <v-col sm="3">
+                  N° Inventario
+                </v-col>
+                <v-col>{{ activo.inventario }}</v-col>
               </v-row>
               <v-row>
-                <v-col>Departamento</v-col>
-                <v-col>{{ funcionario.departamento }}</v-col>
+                <v-col sm="3">
+                  Tipo
+                </v-col>
+                <v-col>{{ activo.tipo }}</v-col>
               </v-row>
               <v-row>
-                <v-col>Sección</v-col>
-                <v-col>{{ funcionario.seccion }}</v-col>
+                <v-col sm="3">
+                  Valor
+                </v-col>
+                <v-col>{{ activo.valor }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col sm="3">
+                  Descripción
+                </v-col>
+                <v-col>{{ activo.descripcion }}</v-col>
               </v-row>
             </v-card-text>
           </v-card>
           <v-card v-else key="2" class="pa-5">
-            <cmp-form-ingreso-datos :funcionario="funcionario" :is-edit="true" @cancelar="cancelar" @graba-datos="grabaDatos" />
+            <cmp-form-ingreso-activo :activo="activo" :is-edit="true" @cancela-edicion="cancelaEdicion" @retorna-datos-activo-ingresado="grabaDatos" />
           </v-card>
         </transition>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="8">
-        <cmp-activos />
+        Ubicacion
       </v-col>
     </v-row>
     <cmp-loading-overlay />
@@ -74,15 +90,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import cmpActivos from '@/pages/funcionarios/components/activosFuncionario'
-import cmpFormIngresoDatos from '@/pages/funcionarios/components/formIngresoDatos'
+import cmpFormIngresoActivo from '@/pages/activos/components/formIngresoActivo'
 import cmpLoadingOverlay from '@/components/loadingOverlay'
 import cmpNormalDialog from '@/components/normalDialog'
 
 export default {
   components: {
-    cmpActivos,
-    cmpFormIngresoDatos,
+    cmpFormIngresoActivo,
     cmpNormalDialog,
     cmpLoadingOverlay
   },
@@ -91,24 +105,27 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      funcionario: 'getFuncionarioSeleccionado'
+      activo: 'getActivoSeleccionado'
     })
   },
   methods: {
     cancelar () {
       this.edit = false
     },
-    grabaDatos (valueFuncionario) {
-      this.$store.dispatch('grabaEdicionFuncionario', valueFuncionario)
+    grabaDatos (activo) {
+      this.$store.dispatch('grabaEdicionActivo', activo)
         .then(() => {
           this.$refs.myAlert.open('Confirmacion', 'Datos guardados correctamente')
-          this.$store.dispatch('actionSetFuncionarioSeleccionado', valueFuncionario)
+          this.$store.dispatch('actionSetActivoSeleccionado', activo)
           this.edit = false
         })
         .catch(() => {
           alert()
           this.$refs.myAlert.open('ERROR', 'Ha ocurrido un error al grabar los datos')
         })
+    },
+    cancelaEdicion () {
+      this.edit = false
     }
   }
 }

@@ -33,6 +33,15 @@ export default {
       // return
     }
   },
+  getActivoSeleccionado: (state) => {
+    try {
+      return state.activoSeleccionado
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+      // return
+    }
+  },
   getActivos: (state) => {
     try {
       return state.listaActivos
