@@ -3,12 +3,12 @@
     <v-row align="center">
       <v-col class="d-flex" cols="12">
         <v-text-field
-          v-model="nombreactivo"
-          :error-messages="nombreactivoErrors"
+          v-model="nombre"
+          :error-messages="nombreErrors"
           label="Activo"
           required
-          @input="$v.nombreactivo.$touch()"
-          @blur="$v.nombreactivo.$touch()"
+          @input="activaBoton($v.nombre)"
+          @blur="$v.nombre.$touch()"
         />
       </v-col>
     </v-row>
@@ -16,11 +16,8 @@
       <v-col class="d-flex" cols="12" sm="6">
         <v-text-field
           v-model="serie"
-          :error-messages="serieErrors"
           label="Serie"
           required
-          @input="$v.serie.$touch()"
-          @blur="$v.serie.$touch()"
         />
       </v-col>
       <v-col class="d-flex" cols="12" sm="6">
@@ -29,7 +26,7 @@
           irror-messages="inventarioErrors"
           label="N° Inventario"
           required
-          @input="$v.inventario.$touch()"
+          @input="activaBoton($v.inventario)"
           @blur="$v.inventario.$touch()"
         />
       </v-col>
@@ -41,7 +38,7 @@
           :error-messages="tipoErrors"
           :items="tiposActivo"
           label="Tipo"
-          @input="$v.tipo.$touch()"
+          @input="activaBoton($v.tipo)"
           @blur="$v.tipo.$touch()"
         />
       </v-col>
@@ -51,7 +48,7 @@
           :error-messages="valorErrors"
           label="Valor"
           required
-          @input="$v.valor.$touch()"
+          @input="activaBoton($v.valor)"
           @blur="$v.valor.$touch()"
         />
       </v-col>
@@ -61,6 +58,7 @@
         <v-text-field
           v-model="descripcion"
           label="Descripción"
+          @input="activaBoton($v.valor)"
         />
       </v-col>
     </v-row>
@@ -103,8 +101,7 @@ import { required, minLength } from 'vuelidate/lib/validators'
 export default {
   mixins: [validationMixin],
   validations: {
-    nombreactivo: { required, minLength: minLength(10) },
-    serie: { required },
+    nombre: { required, minLength: minLength(10) },
     inventario: { required },
     tipo: { required },
     valor: { required }
@@ -130,74 +127,20 @@ export default {
   },
   data: () => ({
     tiposActivo: ['Edificaciones', 'Maquinarias y equipos', 'Vehículo', 'Muebles y enseres', 'Equipos computacionales'],
-    activoEdit: {}
+    id: '',
+    nombre: '',
+    serie: '',
+    inventario: '',
+    tipo: '',
+    valor: '',
+    descripcion: ''
   }),
   computed: {
-    nombreactivo: {
-      get () {
-        return this.activoEdit.nombre
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.activoEdit.nombre = value
-      }
-    },
-    serie: {
-      get () {
-        return this.activoEdit.serie
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.activoEdit.serie = value
-      }
-    },
-    inventario: {
-      get () {
-        return this.activoEdit.inventario
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.activoEdit.inventario = value
-      }
-    },
-    tipo: {
-      get () {
-        return this.activoEdit.tipo
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.activoEdit.tipo = value
-      }
-    },
-    valor: {
-      get () {
-        return this.activoEdit.valor
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.activoEdit.valor = value
-      }
-    },
-    descripcion: {
-      get () {
-        return this.activoEdit.descripcion
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.activoEdit.descripcion = value
-      }
-    },
-    nombreactivoErrors () {
+    nombreErrors () {
       const errors = []
-      if (!this.$v.nombreactivo.$dirty) { return errors }
-      !this.$v.nombreactivo.minLength && errors.push('El Nombre del activo debe ser al menos de 10 caracteres')
-      !this.$v.nombreactivo.required && errors.push('El nombre del activo es obligatorio.')
-      return errors
-    },
-    serieErrors () {
-      const errors = []
-      if (!this.$v.serie.$dirty) { return errors }
-      !this.$v.serie.required && errors.push('El N° de Serie es obligatorio.')
+      if (!this.$v.nombre.$dirty) { return errors }
+      !this.$v.nombre.minLength && errors.push('El Nombre del activo debe ser al menos de 10 caracteres')
+      !this.$v.nombre.required && errors.push('El nombre del activo es obligatorio.')
       return errors
     },
     inventarioErrors () {
@@ -220,15 +163,25 @@ export default {
     }
   },
   mounted () {
-    this.activoEdit = { ...this.activo }
+    this.id = this.activo.id
+    this.nombre = this.activo.nombre
+    this.serie = this.activo.serie
+    this.inventario = this.activo.inventario
+    this.tipo = this.activo.tipo
+    this.valor = this.activo.valor
+    this.descripcion = this.activo.descripcion
   },
   methods: {
+    activaBoton (value) {
+      value.$touch()
+      this.btnDisabled = false
+    },
     cancelEdit () {
       this.$emit('cancela-edicion')
     },
     clear () {
       this.$v.$reset()
-      this.nombreactivo = ''
+      this.nombre = ''
       this.serie = ''
       this.inventario = ''
       this.tipo = ''
@@ -239,7 +192,7 @@ export default {
       // esta funcion devuelve los datos del activo ingresado por el usuario al componente padre
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        const activo = { id: this.activoEdit.id, nombre: this.nombreactivo, serie: this.serie, inventario: this.inventario, tipo: this.tipo, valor: this.valor, descripcion: this.descripcion }
+        const activo = { id: this.id, nombre: this.nombre, serie: this.serie, inventario: this.inventario, tipo: this.tipo, valor: this.valor, descripcion: this.descripcion }
         this.$emit('retorna-datos-activo-ingresado', activo)
       }
     }

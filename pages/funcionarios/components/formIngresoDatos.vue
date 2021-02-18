@@ -7,7 +7,7 @@
           :error-messages="nombreErrors"
           label="Nombre"
           required
-          @input="$v.nombre.$touch()"
+          @input="activaBoton($v.nombre)"
           @blur="$v.nombre.$touch()"
         />
       </v-col>
@@ -17,7 +17,7 @@
           :error-messages="apellidoErrors"
           label="Apellido"
           required
-          @input="$v.apellido.$touch()"
+          @input="activaBoton($v.apellido)"
           @blur="$v.apellido.$touch()"
         />
       </v-col>
@@ -29,7 +29,7 @@
           :error-messages="rutErrors"
           label="Rut"
           required
-          @input="$v.rut.$touch()"
+          @input="activaBoton($v.rut)"
           @blur="$v.rut.$touch()"
         />
       </v-col>
@@ -39,7 +39,7 @@
           :error-messages="emailErrors"
           label="E-mail"
           required
-          @input="$v.email.$touch()"
+          @input="activaBoton($v.email)"
           @blur="$v.email.$touch()"
         />
       </v-col>
@@ -53,7 +53,7 @@
           outlined
           required
           :error-messages="dptoSeleccionadoErrors"
-          @input="$v.departamento.$touch()"
+          @input="activaBoton($v.departamento)"
           @blur="$v.departamento.$touch()"
         />
       </v-col>
@@ -65,7 +65,7 @@
           outlined
           required
           :error-messages="seccionSeleccionadaErrors"
-          @input="$v.seccion.$touch()"
+          @input="activaBoton($v.seccion)"
           @blur="$v.seccion.$touch()"
         />
       </v-col>
@@ -127,64 +127,16 @@ export default {
   data: () => ({
     // DUMMY DATA, tobe fixed later
     departamentos: ['Administración y finanzas', 'Jurídico', 'Técnico', 'Dirección'],
-    funcionarioEdit: { },
+    id: '',
+    nombre: '',
+    apellido: '',
+    rut: '',
+    email: '',
+    departamento: null,
+    seccion: null,
     btnDisabled: true // indicate if GRABAR button is enabled, only is enabled if a value is setted in textformfield form
   }),
   computed: {
-    nombre: {
-      get () {
-        return this.funcionarioEdit.nombre
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.funcionarioEdit.nombre = value
-      }
-    },
-    apellido: {
-      get () {
-        return this.funcionarioEdit.apellido
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.funcionarioEdit.apellido = value
-      }
-    },
-    email: {
-      get () {
-        return this.funcionarioEdit.email
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.funcionarioEdit.email = value
-      }
-    },
-    rut: {
-      get () {
-        return this.funcionarioEdit.rut
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.funcionarioEdit.rut = value
-      }
-    },
-    departamento: {
-      get () {
-        return this.funcionarioEdit.departamento
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.funcionarioEdit.departamento = value
-      }
-    },
-    seccion: {
-      get () {
-        return this.funcionarioEdit.seccion
-      },
-      set (value) {
-        this.btnDisabled = false
-        this.funcionarioEdit.seccion = value
-      }
-    },
     secciones () {
       let options = []
       switch (this.departamento) {
@@ -242,9 +194,19 @@ export default {
     }
   },
   mounted () {
-    this.funcionarioEdit = { ...this.funcionario }
+    this.id = this.funcionario.id
+    this.nombre = this.funcionario.nombre
+    this.apellido = this.funcionario.apellido
+    this.rut = this.funcionario.rut
+    this.email = this.funcionario.email
+    this.departamento = this.funcionario.departamento
+    this.seccion = this.funcionario.seccion
   },
   methods: {
+    activaBoton (value) {
+      value.$touch()
+      this.btnDisabled = false
+    },
     clear () {
       this.nombre = ''
       this.apellido = ''
@@ -256,7 +218,16 @@ export default {
     enviaDatos () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        this.$emit('graba-datos', this.funcionarioEdit)
+        const funcionario = {
+          id: this.id,
+          nombre: this.nombre,
+          apellido: this.apellido,
+          rut: this.rut,
+          email: this.email,
+          departamento: this.departamento,
+          seccion: this.seccion
+        }
+        this.$emit('graba-datos', funcionario)
       }
     },
     cancelar () {
