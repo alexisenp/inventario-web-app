@@ -43,6 +43,7 @@
                     dark
                     small
                     color="primary"
+                    @click="deleteItem(item)"
                   >
                     <v-icon dark>
                       mdi-delete
@@ -88,11 +89,8 @@ export default {
     selected: []
   }),
   methods: {
-    deleteItem () {
-      for (let i = 0; i < this.selected.length; i++) {
-        const index = this.activos.indexOf(this.selected[i])
-        this.activos.splice(index, 1)
-      }
+    deleteItem (payload) {
+      this.activos = this.activos.filter(function (valor) { return valor.inventario !== payload.inventario })
       this.dialog = false
     },
     clicked (value) {

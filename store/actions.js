@@ -133,7 +133,7 @@ export default {
       // retur
     }
   },
-  async grabaDatosCompra({ getters }, payload) {
+  async grabaDatosCompra({ getters, state }, payload) {
     const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
     let arrayIdActivos = []
     return await this.$fire.firestore.runTransaction((transaction) => {
@@ -158,6 +158,17 @@ export default {
         // datosAGrabar.funcionario = { id: getters.getFuncionarioSeleccionado.id, nombre: getters.getFuncionarioSeleccionado.nombre, apellido: getters.getFuncionarioSeleccionado.apellido }
         transaction.set(activoRef, datosAGrabar)
         datosAGrabar.id = activoRef.id
+        const historialActivoRef = this.$fire.firestore.collection('activo').doc(activoRef.id).collection('historial').doc()
+        const date = new Date().toISOString().substr(0, 10)
+        const [year, month, day] = date.split('-')
+        const fechaActual = `${day}/${month}/${year}`
+        console.log(state.authUser)
+        transaction.set(historialActivoRef, {
+          // tendra los siguientes tipos: creado, asignado, baja, eliminado, editado
+          tipo: 'creado',
+          creado: fechaActual,
+          por: { id: state.authUser.uid, email: state.authUser.email, nombre: state.authUser.displayName }
+        })
         arrayIdActivos.push(datosAGrabar)
       })
       return Promise.resolve(arrayIdActivos);

@@ -23,7 +23,7 @@
       <v-col class="d-flex" cols="12" sm="6">
         <v-text-field
           v-model="inventario"
-          irror-messages="inventarioErrors"
+          :error-messages="inventarioErrors"
           label="N° Inventario"
           required
           @input="activaBoton($v.inventario)"
@@ -165,7 +165,6 @@ export default {
   mounted () {
     this.id = this.activo.id
     this.nombre = this.activo.nombre
-    this.serie = this.activo.serie
     this.inventario = this.activo.inventario
     this.tipo = this.activo.tipo
     this.valor = this.activo.valor
@@ -193,6 +192,7 @@ export default {
       this.$v.$touch()
       if (!this.$v.$invalid) {
         const activo = { id: this.id, nombre: this.nombre, serie: this.serie, inventario: this.inventario, tipo: this.tipo, valor: this.valor, descripcion: this.descripcion }
+        this.clear()
         this.$emit('retorna-datos-activo-ingresado', activo)
       }
     }
