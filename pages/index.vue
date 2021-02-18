@@ -10,7 +10,6 @@
           <hr class="my-3">
         </v-card-text>
         <v-card-actions>
-          <cmp-ficha-inventario />
           <v-spacer />
           <v-btn
             color="primary"
@@ -27,11 +26,7 @@
 </template>
 
 <script>
-import cmpFichaInventario from '@/pages/activos/components/fichaInventario'
 export default {
-  components: {
-    cmpFichaInventario
-  },
   data: () => ({
     loading: false
   })

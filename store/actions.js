@@ -73,8 +73,25 @@ export default {
         commit('commitSetLoading', false)
       })
     } catch (e) {
-      alert('Error en sistema ' +
-        e)
+      alert('Error en sistema ' + e)
+      // retur
+    }
+  },
+  cargaActivosFuncionario({ commit }) {
+    try {
+      /* commit('commitSetLoading', true)
+      this.$fire.firestore.collection('funcionario').get().then((querySnapshot) => {
+        const funcionarios = []
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          const funcionario = { id: doc.id, nombre: doc.data().nombre, apellido: doc.data().apellido, rut: doc.data().rut, email: doc.data().email, departamento: doc.data().departamento, seccion: doc.data().seccion }
+          funcionarios.push(funcionario)
+        })
+        commit('llenaListaFuncionarios', funcionarios)
+        commit('commitSetLoading', false)
+      })*/
+    } catch (e) {
+      alert('Error en sistema ' + e)
       // retur
     }
   },
@@ -104,7 +121,7 @@ export default {
         const activos = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const activo = { id:doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
+          const activo = { id: doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
           activos.push(activo)
         })
         commit('llenaListaActivos', activos)
@@ -182,7 +199,7 @@ export default {
   async grabaEdicionActivo({ commit }, payload) {
     commit('commitSetLoading', true)
     const activoRef = this.$fire.firestore.collection('activo').doc(payload.id)
-    await activoRef.update({ nombre: payload.nombre, serie: payload.serie, inventario: payload.inventario, tipo: payload.tipo, valor: payload.valor, desc:payload.descripcion }).then(() => {
+    await activoRef.update({ nombre: payload.nombre, serie: payload.serie, inventario: payload.inventario, tipo: payload.tipo, valor: payload.valor, desc: payload.descripcion }).then(() => {
       commit('commitSetLoading', false)
       return Promise.resolve(true)
     }).catch((error) => {

@@ -13,7 +13,7 @@
           v-bind="attrs"
           v-on="on"
         >
-          Open Dialog
+          Ficha Inventario
         </v-btn>
       </template>
       <v-card>

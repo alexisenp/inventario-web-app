@@ -25,7 +25,7 @@
 import { mapGetters } from 'vuex'
 export default {
   fetch () {
-    this.$store.dispatch('cargaFuncionarios')
+    this.$store.dispatch('cargaActivosFuncionario')
   },
   data () {
     return {

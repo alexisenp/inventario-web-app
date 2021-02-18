@@ -62,6 +62,7 @@
         </transition>
       </v-col>
     </v-row>
+    <cmp-ficha-inventario />
     <v-row justify="center" align="center">
       <v-col sm="8">
         <cmp-activos />
@@ -75,6 +76,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import cmpActivos from '@/pages/funcionarios/components/activosFuncionario'
+import cmpFichaInventario from '@/pages/activos/components/fichaInventario'
 import cmpFormIngresoDatos from '@/pages/funcionarios/components/formIngresoDatos'
 import cmpLoadingOverlay from '@/components/loadingOverlay'
 import cmpNormalDialog from '@/components/normalDialog'
@@ -84,7 +86,8 @@ export default {
     cmpActivos,
     cmpFormIngresoDatos,
     cmpNormalDialog,
-    cmpLoadingOverlay
+    cmpLoadingOverlay,
+    cmpFichaInventario
   },
   data: () => ({
     edit: false
