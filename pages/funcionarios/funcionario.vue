@@ -62,7 +62,14 @@
         </transition>
       </v-col>
     </v-row>
-    <cmp-ficha-inventario />
+    <v-row>
+      <v-col justify="center" align="center">
+        <cmp-ficha-inventario />
+      </v-col>
+      <v-col>
+        <cmp-selecciona-activo />
+      </v-col>
+    </v-row>
     <v-row justify="center" align="center">
       <v-col sm="8">
         <cmp-activos />
@@ -78,6 +85,7 @@ import { mapGetters } from 'vuex'
 import cmpActivos from '@/pages/funcionarios/components/activosFuncionario'
 import cmpFichaInventario from '@/pages/activos/components/fichaInventario'
 import cmpFormIngresoDatos from '@/pages/funcionarios/components/formIngresoDatos'
+import cmpSeleccionaActivo from '@/pages/funcionarios/components/seleccionaActivo'
 import cmpLoadingOverlay from '@/components/loadingOverlay'
 import cmpNormalDialog from '@/components/normalDialog'
 
@@ -87,7 +95,8 @@ export default {
     cmpFormIngresoDatos,
     cmpNormalDialog,
     cmpLoadingOverlay,
-    cmpFichaInventario
+    cmpFichaInventario,
+    cmpSeleccionaActivo
   },
   data: () => ({
     edit: false

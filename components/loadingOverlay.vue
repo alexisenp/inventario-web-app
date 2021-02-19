@@ -1,6 +1,10 @@
 <template>
   <div class="text-center">
-    <v-overlay :value="loading">
+    <v-overlay
+      absolute
+      z-index="1000"
+      :value="loading"
+    >
       <v-progress-circular
         indeterminate
         size="64"

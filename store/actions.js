@@ -133,7 +133,26 @@ export default {
       // retur
     }
   },
-  async grabaDatosCompra({ getters, state }, payload) {
+  async buscarActivo({ commit }, payload) {
+    commit('commitSetLoading', true)
+
+    return await this.$fire.firestore.collection('activo').where("inventario", "==", payload)
+      .get().then((querySnapshot) => {
+        let activo = null
+        if (!querySnapshot.empty) {
+          activo = { id: querySnapshot.docs[0].id, nombre: querySnapshot.docs[0].data().nombre, serie: querySnapshot.docs[0].data().serie, inventario: querySnapshot.docs[0].data().inventario, tipo: querySnapshot.docs[0].data().tipo, valor: querySnapshot.docs[0].data().valor, descripcion: querySnapshot.docs[0].data().desc, fichaalta: querySnapshot.docs[0].data().fichaalta, documentocompra: querySnapshot.docs[0].data().dc }
+        }
+        commit('commitSetLoading', false)
+        return Promise.resolve(activo)
+      })
+      .catch((e) => {
+        console.log('Error en sistema' + e)
+        return Promise.reject(e)
+      })
+
+  },
+  async grabaDatosCompra({ commit, state }, payload) {
+    commit('commitSetLoading', true)
     const datosCompraRef = this.$fire.firestore.collection('datoscompra').doc()
     let arrayIdActivos = []
     return await this.$fire.firestore.runTransaction((transaction) => {
@@ -159,22 +178,21 @@ export default {
         transaction.set(activoRef, datosAGrabar)
         datosAGrabar.id = activoRef.id
         const historialActivoRef = this.$fire.firestore.collection('activo').doc(activoRef.id).collection('historial').doc()
-        const date = new Date().toISOString().substr(0, 10)
-        const [year, month, day] = date.split('-')
-        const fechaActual = `${day}/${month}/${year}`
-        console.log(state.authUser)
         transaction.set(historialActivoRef, {
           // tendra los siguientes tipos: creado, asignado, baja, eliminado, editado
           tipo: 'creado',
-          creado: fechaActual,
+          creado: this.$fireModule.firestore.FieldValue.serverTimestamp(),
           por: { id: state.authUser.uid, email: state.authUser.email, nombre: state.authUser.displayName }
         })
         arrayIdActivos.push(datosAGrabar)
       })
+      commit('commitSetLoading', false)
       return Promise.resolve(arrayIdActivos);
     }).then(() => {
+      commit('commitSetLoading', false)
       return Promise.resolve(arrayIdActivos);
     }).catch((error) => {
+      commit('commitSetLoading', false)
       console.log(error)
       return Promise.reject(error);
     })
@@ -205,6 +223,36 @@ export default {
     }).catch((error) => {
       alert('Ha ocurrido un error ' + error)
       return Promise.reject(false)
+    })
+  },
+  async asignaActivo({ commit, getters, state }, payload) {
+    commit('commitSetLoading', true)
+    const funcionarioRef = this.$fire.firestore.collection('funcionario').doc(getters.getFuncionarioSeleccionado.id)
+    let arrayIdActivos = []
+    payload.forEach(element => {
+      arrayIdActivos.push(element.id)
+    });
+    return await this.$fire.firestore.runTransaction((transaction) => {
+      transaction.update(funcionarioRef, { activos: this.$fireModule.firestore.FieldValue.arrayUnion(...arrayIdActivos) })
+      arrayIdActivos.forEach(idActivo => {
+        const activoRef = this.$fire.firestore.collection('activo').doc(idActivo)
+        transaction.update(activoRef, { asignadoa: getters.getFuncionarioSeleccionado.id })
+        // tendra los siguientes tipos: creado, asignado, baja, eliminado, editado
+        transaction.set(activoRef.collection('historial').doc(), {
+          creado: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+          tipo: 'asignado',
+          por: { id: state.authUser.uid, email: state.authUser.email, nombre: state.authUser.displayName }
+        })
+      });
+      commit('commitSetLoading', false)
+      return Promise.resolve(true)
+    }).then(() => {
+      commit('commitSetLoading', false)
+      return Promise.resolve(true);
+    }).catch((error) => {
+      commit('commitSetLoading', false)
+      console.log(error)
+      return Promise.reject(error);
     })
   },
   async grabaEdicionActivo({ commit }, payload) {

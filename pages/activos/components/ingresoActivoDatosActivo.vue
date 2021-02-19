@@ -6,54 +6,7 @@
         <p class="title">
           Activos
         </p>
-        <v-simple-table
-          v-if="activos.length > 0 "
-          @click:row="clicked"
-        >
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th class="text-left">
-                  Nombre Activo
-                </th>
-                <th class="text-left">
-                  N° Serie
-                </th>
-                <th class="text-left">
-                  Valor
-                </th>
-                <th class="text-left">
-                  Borrar
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(item, index) in activos"
-                :key="index"
-              >
-                <td>{{ item.inventario }}</td>
-                <td>{{ item.nombre }}</td>
-                <td>{{ item.serie }}</td>
-                <td>{{ item.valor }}</td>
-                <td>
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    small
-                    color="primary"
-                    @click="deleteItem(item)"
-                  >
-                    <v-icon dark>
-                      mdi-delete
-                    </v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
+        <cmp-listado-activos v-if="activos.length > 0 " :activos="activos" @delete-item="deleteItem" />
         <div v-else>
           No ha ingresado datos
         </div>
@@ -78,10 +31,12 @@
 
 <script>
 import cmpFormIngresoActivo from '@/pages/activos/components/formIngresoActivo'
+import cmpListadoActivos from '@/components/listadoActivos'
 
 export default {
   components: {
-    cmpFormIngresoActivo
+    cmpFormIngresoActivo,
+    cmpListadoActivos
   },
   data: () => ({
     activos: [],

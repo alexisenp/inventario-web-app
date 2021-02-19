@@ -27,6 +27,7 @@
         >
           Aceptar
         </v-btn>
+        <v-spacer />
       </v-card-actions>
     </v-card>
   </v-dialog>
