@@ -73,7 +73,7 @@
             </v-card-text>
           </v-card>
           <v-card v-else key="2" class="pa-5">
-            <cmp-form-ingreso-activo :activo="activo" :is-edit="true" @cancela-edicion="cancelaEdicion" @retorna-datos-activo-ingresado="grabaDatos" />
+            <cmp-form-ingreso-activo ref="formIngreso" :activo="activo" :is-edit="true" @cancela-edicion="cancelaEdicion" @retorna-datos-activo-ingresado="grabaDatos" />
           </v-card>
         </transition>
       </v-col>
@@ -119,9 +119,8 @@ export default {
           this.$store.dispatch('actionSetActivoSeleccionado', activo)
           this.edit = false
         })
-        .catch(() => {
-          alert()
-          this.$refs.myAlert.open('ERROR', 'Ha ocurrido un error al grabar los datos')
+        .catch((error) => {
+          this.$refs.myAlert.open('ERROR', 'Ha ocurrido un error al grabar los datos' + error)
         })
     },
     cancelaEdicion () {

@@ -113,8 +113,10 @@ export default {
     },
     grabar () {
       this.dialog = false
-      this.$store.dispatch('asignaActivo', this.activos).then((value) => {
-        alert('Datos grabados correctamente')
+      this.$store.dispatch('asignaActivo', this.activos).then(() => {
+        this.$refs.myAlert.open('Datos guardados', 'Activo(s) asignado(s) correctamente.')
+        this.$store.dispatch('addActivoToList', this.activos)
+        this.activos = []
         this.clean()
       })
         .catch((error) => {
@@ -135,9 +137,15 @@ export default {
         this.$store.dispatch('buscarActivo', this.valorABuscar)
           .then((activo) => {
             if (activo != null) {
-              this.valorABuscar = ''
-              this.activos.push(activo)
-              this.btnDisabled = false
+              if (activo.fichaalta == null) {
+                this.$refs.myAlert.open('Activo sin alta', 'El activo indicado no se ha dado de alta en el sistema.')
+              } else if (activo.asignadoa != null) {
+                this.$refs.myAlert.open('Activo ya asignado', 'El activo indicado ya esta asignado.')
+              } else {
+                this.valorABuscar = ''
+                this.activos.push(activo)
+                this.btnDisabled = false
+              }
             } else {
               this.$refs.myAlert.open('Activo no encontrado', 'No existe un activo con el numero de inventario ingresado.')
             }

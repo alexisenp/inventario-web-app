@@ -64,7 +64,14 @@
     </v-row>
     <v-row>
       <v-col justify="center" align="center">
-        <cmp-ficha-inventario />
+        <cmp-ficha-inventario ref="fichaInventario" />
+        <v-btn
+          color="primary"
+          dark
+          @click="abreFicha"
+        >
+          Ficha Inventario
+        </v-btn>
       </v-col>
       <v-col>
         <cmp-selecciona-activo />
@@ -107,6 +114,13 @@ export default {
     })
   },
   methods: {
+    abreFicha () {
+      if (this.funcionario.activos != null && this.funcionario.activos.length > 0) {
+        this.$refs.fichaInventario.open(this.funcionario)
+      } else {
+        this.$refs.myAlert.open('Información', 'El funcionario seleccionado no tiene activos asignados.')
+      }
+    },
     cancelar () {
       this.edit = false
     },

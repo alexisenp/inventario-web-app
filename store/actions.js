@@ -66,7 +66,7 @@ export default {
         const funcionarios = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const funcionario = { id: doc.id, nombre: doc.data().nombre, apellido: doc.data().apellido, rut: doc.data().rut, email: doc.data().email, departamento: doc.data().departamento, seccion: doc.data().seccion }
+          const funcionario = { id: doc.id, nombre: doc.data().nombre, apellido: doc.data().apellido, rut: doc.data().rut, email: doc.data().email, departamento: doc.data().departamento, seccion: doc.data().seccion, activos: doc.data().activos }
           funcionarios.push(funcionario)
         })
         commit('llenaListaFuncionarios', funcionarios)
@@ -77,23 +77,25 @@ export default {
       // retur
     }
   },
-  cargaActivosFuncionario({ commit }) {
-    try {
-      /* commit('commitSetLoading', true)
-      this.$fire.firestore.collection('funcionario').get().then((querySnapshot) => {
-        const funcionarios = []
+  async cargaActivosFuncionario({ commit, getters }) {
+    commit('commitSetLoading', true)
+    return await this.$fire.firestore.collection('activo').where("asignadoa", "==", getters.getFuncionarioSeleccionado.id).get()
+      .then((querySnapshot) => {
+        let activos = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const funcionario = { id: doc.id, nombre: doc.data().nombre, apellido: doc.data().apellido, rut: doc.data().rut, email: doc.data().email, departamento: doc.data().departamento, seccion: doc.data().seccion }
-          funcionarios.push(funcionario)
+          const activo = { id: doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
+          activos.push(activo)
         })
-        commit('llenaListaFuncionarios', funcionarios)
+        commit('llenaListaActivos', activos)
         commit('commitSetLoading', false)
-      })*/
-    } catch (e) {
-      alert('Error en sistema ' + e)
-      // retur
-    }
+        return Promise.resolve(true)
+      })
+      .catch((error) => {
+        commit('commitSetLoading', false)
+        console.log('Ha ocurrido un error' + error)
+        return Promise.reject(false)
+      })
   },
   cargaAltas({ commit }) {
     try {
@@ -128,9 +130,26 @@ export default {
         commit('commitSetLoading', false)
       })
     } catch (e) {
-      alert('Error en sistema ' +
-        e)
-      // retur
+      alert('Error en sistema ' + e)
+    }
+  },
+  async cargaActivosFichaInventario({ commit }, payload) {
+    try {
+      commit('commitSetLoading', true)
+      const collection = this.$fire.firestore.collection('activo')
+      const reads = payload.map(id => collection.doc(id).get())
+      const result = await Promise.all(reads)
+      commit('commitSetLoading', false)
+
+      const activos = []
+      let activo
+      result.map(v => {
+        activo = { id: v.id, asignadoa: v.data().asignadoa, nombre: v.data().nombre, serie: v.data().serie, inventario: v.data().inventario, tipo: v.data().tipo, valor: v.data().valor, descripcion: v.data().desc, fichaalta: v.data().fichaalta, documentocompra: v.data().dc }
+        activos.push(activo)
+      })
+      return activos
+    } catch (e) {
+      alert('Error en sistema ' + e)
     }
   },
   async buscarActivo({ commit }, payload) {
@@ -140,7 +159,7 @@ export default {
       .get().then((querySnapshot) => {
         let activo = null
         if (!querySnapshot.empty) {
-          activo = { id: querySnapshot.docs[0].id, nombre: querySnapshot.docs[0].data().nombre, serie: querySnapshot.docs[0].data().serie, inventario: querySnapshot.docs[0].data().inventario, tipo: querySnapshot.docs[0].data().tipo, valor: querySnapshot.docs[0].data().valor, descripcion: querySnapshot.docs[0].data().desc, fichaalta: querySnapshot.docs[0].data().fichaalta, documentocompra: querySnapshot.docs[0].data().dc }
+          activo = { id: querySnapshot.docs[0].id, asignadoa: querySnapshot.docs[0].data().asignadoa, nombre: querySnapshot.docs[0].data().nombre, serie: querySnapshot.docs[0].data().serie, inventario: querySnapshot.docs[0].data().inventario, tipo: querySnapshot.docs[0].data().tipo, valor: querySnapshot.docs[0].data().valor, descripcion: querySnapshot.docs[0].data().desc, fichaalta: querySnapshot.docs[0].data().fichaalta, documentocompra: querySnapshot.docs[0].data().dc }
         }
         commit('commitSetLoading', false)
         return Promise.resolve(activo)
@@ -149,6 +168,38 @@ export default {
         console.log('Error en sistema' + e)
         return Promise.reject(e)
       })
+
+  },
+  async quitaAsignacionActivoFuncionario({ commit, getters, state }, payload) {
+    commit('commitSetLoading', true)
+    const datosActivoRef = this.$fire.firestore.collection('activo').doc(payload)
+    return await this.$fire.firestore.runTransaction((transaction) => {
+      transaction.update(datosActivoRef, { asignadoa: this.$fireModule.firestore.FieldValue.delete() })
+
+      const funcionarioRef = this.$fire.firestore.collection('funcionario').doc(getters.getFuncionarioSeleccionado.id)
+      transaction.update(funcionarioRef, { activos: this.$fireModule.firestore.FieldValue.arrayRemove(payload) })
+
+
+      const historialActivoRef = this.$fire.firestore.collection('activo').doc(payload).collection('historial').doc()
+      transaction.set(historialActivoRef, {
+        // tendra los siguientes tipos: creado, asignado, baja, eliminado, editado
+        tipo: 'desasignado',
+        fecha: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        a: { id: state.funcionarioSeleccionado.id, nombre: state.funcionarioSeleccionado.nombre, seccion: state.funcionarioSeleccionado.seccion },
+        por: { id: state.authUser.uid, email: state.authUser.email, nombre: state.authUser.displayName }
+      })
+
+      commit('commitSetLoading', false)
+      return Promise.resolve(true)
+    }).then(() => {
+      commit('commitSetLoading', false)
+      return Promise.resolve(true);
+    }).catch((error) => {
+      commit('commitSetLoading', false)
+      console.log(error)
+      return Promise.reject(error);
+    })
+
 
   },
   async grabaDatosCompra({ commit, state }, payload) {
@@ -197,19 +248,29 @@ export default {
       return Promise.reject(error);
     })
   },
-  async grabaFichaAlta({ commit }, payload) {
+  async grabaFichaAlta({ commit, state }, payload) {
+    commit('commitSetLoading', true)
     const fichAltaRef = this.$fire.firestore.collection('altas').doc()
     return await this.$fire.firestore.runTransaction((transaction) => {
       transaction.set(fichAltaRef, { numero: payload.numero, fecha: payload.fecha, activos: payload.activos, firmantes: payload.firmantes })
       payload.activos.forEach((activo) => { // traer arrays de activos
         const activoRef = this.$fire.firestore.collection('activo').doc(activo) // indicar id activo
         transaction.update(activoRef, { fichaalta: fichAltaRef.id })
+
+        transaction.set(activoRef.collection('historial').doc(activo), {
+          fecha: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+          tipo: 'alta',
+          por: { id: state.authUser.uid, email: state.authUser.email, nombre: state.authUser.displayName }
+        })
       })
+      commit('commitSetLoading', false)
       return Promise.resolve(true)
     }).then(() => {
+      commit('commitSetLoading', false)
       return Promise.resolve(true);
     }).catch((error) => {
       console.log(error)
+      commit('commitSetLoading', false)
       return Promise.reject(error);
     })
   },
@@ -237,10 +298,11 @@ export default {
       arrayIdActivos.forEach(idActivo => {
         const activoRef = this.$fire.firestore.collection('activo').doc(idActivo)
         transaction.update(activoRef, { asignadoa: getters.getFuncionarioSeleccionado.id })
-        // tendra los siguientes tipos: creado, asignado, baja, eliminado, editado
+        // tendra los siguientes tipos: creado, asignado, desasignado baja, eliminado, editado
         transaction.set(activoRef.collection('historial').doc(), {
-          creado: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+          fecha: this.$fireModule.firestore.FieldValue.serverTimestamp(),
           tipo: 'asignado',
+          a: { id: state.funcionarioSeleccionado.id, nombre: state.funcionarioSeleccionado.nombre, seccion: state.funcionarioSeleccionado.seccion },
           por: { id: state.authUser.uid, email: state.authUser.email, nombre: state.authUser.displayName }
         })
       });
@@ -255,22 +317,33 @@ export default {
       return Promise.reject(error);
     })
   },
-  async grabaEdicionActivo({ commit }, payload) {
+  async grabaEdicionActivo({ commit, state }, payload) {
     commit('commitSetLoading', true)
     const activoRef = this.$fire.firestore.collection('activo').doc(payload.id)
-    await activoRef.update({ nombre: payload.nombre, serie: payload.serie, inventario: payload.inventario, tipo: payload.tipo, valor: payload.valor, desc: payload.descripcion }).then(() => {
+    return await this.$fire.firestore.runTransaction((transaction) => {
+      transaction.update(activoRef, { nombre: payload.nombre, serie: payload.serie, inventario: payload.inventario, tipo: payload.tipo, valor: payload.valor, desc: payload.descripcion })
+      
+      transaction.set(activoRef.collection('historial').doc(), {
+        fecha: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+        tipo: 'actualizado',
+        por: { id: state.authUser.uid, email: state.authUser.email, nombre: state.authUser.displayName }
+      })
       commit('commitSetLoading', false)
       return Promise.resolve(true)
+    }).then(() => {
+      commit('commitSetLoading', false)
+      return Promise.resolve(true);
     }).catch((error) => {
-      alert('Ha ocurrido un error ' + error)
-      return Promise.reject(false)
+      commit('commitSetLoading', false)
+      console.log(error)
+      return Promise.reject(error);
     })
   },
   async grabaEdicionFuncionario({ commit }, payload) {
     commit('commitSetLoading', true)
-    const fichAltaRef = this.$fire.firestore.collection('funcionario').doc(payload.id)
+    const funcionarioRef = this.$fire.firestore.collection('funcionario').doc(payload.id)
 
-    await fichAltaRef.update({ nombre: payload.nombre, apellido: payload.apellido, rut: payload.rut, departamento: payload.departamento, seccion: payload.seccion }).then(() => {
+    await funcionarioRef.update({ nombre: payload.nombre, apellido: payload.apellido, rut: payload.rut, departamento: payload.departamento, seccion: payload.seccion }).then(() => {
       commit('commitSetLoading', false)
       return Promise.resolve(true)
     }).catch((error) => {
@@ -282,24 +355,35 @@ export default {
     try {
       commit('commitSetLoading', loading)
     } catch (e) {
-      alert('Error en sistema ' +
-        e)
+      alert('Error en sistema ' + e)
     }
   },
   actionSetFuncionarioSeleccionado({ commit }, payload) {
     try {
       commit('commitSetFuncionarioSeleccionado', payload)
     } catch (e) {
-      alert('Error en sistema ' +
-        e)
+      alert('Error en sistema ' + e)
     }
   },
   actionSetActivoSeleccionado({ commit }, payload) {
     try {
       commit('commitSetActivoSeleccionado', payload)
     } catch (e) {
-      alert('Error en sistema ' +
-        e)
+      alert('Error en sistema ' + e)
+    }
+  },
+  addActivoToList({ commit }, payload) {
+    try {
+      commit('addActivo', payload)
+    } catch (e) {
+      alert('Error en sistema ' + e)
+    }
+  },
+  deleteActivoFromList({ commit }, payload) {
+    try {
+      commit('deleteActivo', payload)
+    } catch (e) {
+      alert('Error en sistema ' + e)
     }
   },
   actionSetAltaSeleccionada({ commit }, payload) {

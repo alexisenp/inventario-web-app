@@ -45,7 +45,7 @@
               </v-col>
               <v-col class="d-flex" cols="12" sm="3">
                 <v-menu
-                  v-model="menu2"
+                  v-model="menu"
                   :close-on-content-click="false"
                   :nudge-right="40"
                   transition="scale-transition"
@@ -65,7 +65,7 @@
                   <v-date-picker
                     v-model="date"
                     locale="es-es"
-                    @input="menu2 = false"
+                    @input="menu = false"
                   />
                 </v-menu>
               </v-col>
@@ -128,8 +128,7 @@ export default {
     totalFactura: '1452100',
     // fechafactura: '',
     date: new Date().toISOString().substr(0, 10),
-    menu: false,
-    menu2: false
+    menu: false
   }),
   computed: {
     computedDateFormatted () {

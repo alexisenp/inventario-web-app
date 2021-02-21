@@ -22,13 +22,16 @@
       </v-col>
       <v-col class="d-flex" cols="12" sm="6">
         <v-text-field
+          v-if="!isEdit"
           v-model="inventario"
           :error-messages="inventarioErrors"
           label="N° Inventario"
           required
-          @input="activaBoton($v.inventario)"
-          @blur="$v.inventario.$touch()"
+          @blur="activaBoton($v.inventario)"
         />
+        <div v-else>
+          {{ inventario }}
+        </div>
       </v-col>
     </v-row>
     <v-row align="center">
@@ -102,7 +105,28 @@ export default {
   mixins: [validationMixin],
   validations: {
     nombre: { required, minLength: minLength(10) },
-    inventario: { required },
+    inventario: {
+      required,
+      isUnique (value) {
+        // standalone validator ideally should not assume a field is required
+        if (value === '') { return true }
+        if (this.isEdit) { return true }
+
+        return new Promise((resolve, reject) => {
+          this.$store.dispatch('buscarActivo', value)
+            .then((activo) => {
+              if (activo != null) {
+                reject(new Error('Nro inventario ya usado'))
+              } else {
+                resolve(true)
+              }
+            })
+            .catch((error) => {
+              alert('Ha ocurrido un error \n' + error)
+            })
+        })
+      }
+    },
     tipo: { required },
     valor: { required }
   },
@@ -147,6 +171,7 @@ export default {
       const errors = []
       if (!this.$v.inventario.$dirty) { return errors }
       !this.$v.inventario.required && errors.push('El N° de Inventario es obligatorio.')
+      !this.$v.inventario.isUnique && errors.push('El nro de inventario ya esta en uso por otro activo.')
       return errors
     },
     tipoErrors () {
@@ -165,6 +190,7 @@ export default {
   mounted () {
     this.id = this.activo.id
     this.nombre = this.activo.nombre
+    this.serie = this.activo.serie
     this.inventario = this.activo.inventario
     this.tipo = this.activo.tipo
     this.valor = this.activo.valor
@@ -192,7 +218,6 @@ export default {
       this.$v.$touch()
       if (!this.$v.$invalid) {
         const activo = { id: this.id, nombre: this.nombre, serie: this.serie, inventario: this.inventario, tipo: this.tipo, valor: this.valor, descripcion: this.descripcion }
-        this.clear()
         this.$emit('retorna-datos-activo-ingresado', activo)
       }
     }

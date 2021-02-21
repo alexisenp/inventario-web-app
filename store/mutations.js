@@ -34,6 +34,20 @@ export default {
   commitSetFuncionarioSeleccionado (state, payload) {
     state.funcionarioSeleccionado = payload
   },
+  addActivo (state, payload) {
+    state.listaActivos.push(...payload)
+    payload.forEach((element) => {
+      state.funcionarioSeleccionado.activos.push(element.id)
+    })
+  },
+  deleteActivo (state, payload) {
+    state.listaActivos = state.listaActivos.filter(function (value) {
+      return value.id !== payload
+    })
+    state.funcionarioSeleccionado.activos = state.funcionarioSeleccionado.activos.filter(function (value) {
+      return value !== payload
+    })
+  },
   commitSetActivoSeleccionado (state, payload) {
     state.activoSeleccionado = payload
   },

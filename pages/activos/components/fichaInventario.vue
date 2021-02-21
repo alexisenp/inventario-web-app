@@ -5,16 +5,6 @@
     hide-overlay
     transition="dialog-bottom-transition"
   >
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        color="primary"
-        dark
-        v-bind="attrs"
-        v-on="on"
-      >
-        Ficha Inventario
-      </v-btn>
-    </template>
     <v-card>
       <v-toolbar
         dark
@@ -76,7 +66,7 @@
                 UBICACION
               </v-col>
               <v-col sm="10">
-                Direccion
+                {{ funcionario.seccion }}
               </v-col>
             </v-row>
             <v-row class="mt-n6">
@@ -84,12 +74,12 @@
                 RESPONSABLE
               </v-col>
               <v-col sm="10">
-                Alexis Nuñez Pozo
+                {{ funcionario.nombre }}
               </v-col>
             </v-row>
           </v-col>
         </v-row>
-        <cmp-ficha-inventario-table class="mt-7" />
+        <cmp-ficha-inventario-table :activos="activos" class="mt-7" />
         <v-row class="mb-16">
           <v-col>Está estrictamente prohibido realizar movimientos de las especies sin la debida autorización del encargado de inventario y del jefe del Departamento Administración y Finanzas.</v-col>
         </v-row>
@@ -122,13 +112,31 @@ export default {
       dialog: false,
       notifications: false,
       sound: true,
-      widgets: false
+      widgets: false,
+      funcionario: {},
+      activos: []
     }
   },
   computed: {
     fecha () {
       const fecha = Date()
       return fecha.getDate + '/' + fecha.getMonth + '/' + fecha.getFullYear
+    }
+  },
+  methods: {
+    open (funcionario) {
+      this.dialog = true
+      this.funcionario = funcionario
+      this.cargaDatosActivos(funcionario.activos)
+    },
+    cargaDatosActivos (ArrayidActivos) {
+      this.$store.dispatch('cargaActivosFichaInventario', ArrayidActivos)
+        .then((arrayActivos) => {
+          this.activos = arrayActivos
+        })
+        .catch((error) => {
+          alert('Ha ocurrido un error \n' + error)
+        })
     }
   }
 }
