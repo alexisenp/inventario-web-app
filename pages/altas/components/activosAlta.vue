@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-header>Activos de ficha de alta por corregir</v-expansion-panel-header>
+      <v-expansion-panel-header>Activos de alta</v-expansion-panel-header>
       <v-expansion-panel-content>
         <cmp-table-activos-alta />
       </v-expansion-panel-content>

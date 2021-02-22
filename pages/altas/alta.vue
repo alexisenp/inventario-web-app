@@ -94,7 +94,7 @@
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="8">
-        <cmp-alta />
+        <cmp-activos-alta />
       </v-col>
     </v-row>
     <cmp-loading-overlay />
@@ -104,13 +104,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import cmpAlta from '@/pages/altas/components/activosAlta'
+import cmpActivosAlta from '@/pages/altas/components/activosAlta'
 import cmpLoadingOverlay from '@/components/loadingOverlay'
 import cmpNormalDialog from '@/components/normalDialog'
 
 export default {
   components: {
-    cmpAlta,
+    cmpActivosAlta,
     cmpLoadingOverlay,
     cmpNormalDialog
   },
@@ -137,9 +137,9 @@ export default {
     async saveData () {
       const valorNumero = (this.numeroFixLater === '') ? 'Borrador' : this.numeroFixLater
       await this.$store.dispatch('grabaEdicionFichaAlta', { id: this.alta.id, numero: valorNumero })
-        .then((value) => {
+        .then(() => {
           this.$refs.myAlert.open('Confirmación', 'Datos guardados correctamente.')
-          this.alta.numero = valorNumero
+          this.$store.dispatch('changeNumeroAltaSeleccionada', valorNumero)
           this.edit = false
         })
         .catch(() => {

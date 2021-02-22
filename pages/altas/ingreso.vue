@@ -23,7 +23,7 @@
       <v-col cols="12" sm="8" md="8">
         <v-card class="pa-5">
           <v-card-text>
-            <cmp-form-ingreso-datos @cancelar="cancelar" @graba-datos="grabaDatos" />
+            <cmp-form-ingreso-datos @cancelar="cancelar" @vista-previa="grabaDatos" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -47,15 +47,8 @@ export default {
       'grabaFichaAlta'
     ]),
     async grabaDatos (alta) {
-      const idsActivos = []
-      alta.activos.forEach((activo) => {
-        idsActivos.push(activo.id)
-      })
-      if (await this.grabaFichaAlta(
-        { numero: alta.numero, fecha: alta.fecha, firmantes: alta.firmantes, activos: idsActivos })) {
-        await this.$refs.fichaAlta.showDialog(alta.activos)
-        this.$router.push('/altas')
-      }
+      await this.$refs.fichaAlta.showDialog(alta.activos)
+      this.$router.push('/altas')
     },
     cancelar () {
       this.$router.push('/altas')

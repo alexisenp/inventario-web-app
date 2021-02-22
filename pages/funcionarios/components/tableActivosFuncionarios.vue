@@ -95,7 +95,7 @@ export default {
         // alert('Datos rescatados correctamente')
       })
       .catch(() => {
-        this.$refs.myAlert('Error', 'Error al rescatar los datos')
+        this.$refs.myAlert.open('Error', 'Error al rescatar los datos')
       })
   },
   data () {

@@ -219,6 +219,7 @@ export default {
       if (!this.$v.$invalid) {
         const activo = { id: this.id, nombre: this.nombre, serie: this.serie, inventario: this.inventario, tipo: this.tipo, valor: this.valor, descripcion: this.descripcion }
         this.$emit('retorna-datos-activo-ingresado', activo)
+        this.clear()
       }
     }
   }

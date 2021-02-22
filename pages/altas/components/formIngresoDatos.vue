@@ -55,7 +55,7 @@
         :disabled="btnDisabled"
         @click="enviaDatos"
       >
-        Grabar
+        Vista Previa
       </v-btn>
     </v-row>
     <cmp-normal-dialog ref="myAlert" />
@@ -141,7 +141,7 @@ export default {
             firmantes: this.firmantes,
             activos: this.activos
           }
-          this.$emit('graba-datos', alta)
+          this.$emit('vista-previa', alta)
         } else {
           this.$refs.myAlert.open('Debe ingresar activos', 'No ha ingresado ningún activo para dar de alta.')
         }

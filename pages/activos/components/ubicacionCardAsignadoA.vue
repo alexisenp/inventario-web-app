@@ -25,6 +25,14 @@
         <v-col>{{ funcionario.seccion }}</v-col>
       </v-row>
     </v-card-text>
+    <v-card-actions>
+      <v-btn
+        color="primary"
+        @click="muestraFuncionario(funcionario)"
+      >
+        Ver funcionario
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -44,14 +52,19 @@ export default {
         // alert('Datos rescatados correctamente')
         })
         .catch((error) => {
-          alert(error)
-        // this.$refs.myAlert('Error', 'Error al rescatar los datos \n' + error)
+          this.$refs.myAlert.open('Error', 'Error al rescatar los datos \n' + error)
         })
     }
   },
   data: () => {
     return {
       funcionario: {}
+    }
+  },
+  methods: {
+    muestraFuncionario (funcionario) {
+      this.$store.dispatch('actionSetFuncionarioSeleccionado', funcionario)
+      this.$router.push('/funcionarios/funcionario')
     }
   }
 }

@@ -48,10 +48,18 @@ export default {
       return value !== payload
     })
   },
+  deleteActivoAlta (state, payload) {
+    state.listaActivos = state.listaActivos.filter(function (value) {
+      return value.id !== payload
+    })
+  },
   commitSetActivoSeleccionado (state, payload) {
     state.activoSeleccionado = payload
   },
   commitSetAltaSeleccionada (state, payload) {
     state.altaSeleccionada = payload
+  },
+  changeNumeroAltaSeleccionada (state, payload) {
+    state.altaSeleccionada.numero = payload
   }
 }
