@@ -80,7 +80,7 @@
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="8">
-        Ubicacion
+        <cmp-ubicacion :id-funcionario="activo.asignadoa" />
       </v-col>
     </v-row>
     <cmp-loading-overlay />
@@ -93,12 +93,14 @@ import { mapGetters } from 'vuex'
 import cmpFormIngresoActivo from '@/pages/activos/components/formIngresoActivo'
 import cmpLoadingOverlay from '@/components/loadingOverlay'
 import cmpNormalDialog from '@/components/normalDialog'
+import cmpUbicacion from '@/pages/activos/components/ubicacion'
 
 export default {
   components: {
     cmpFormIngresoActivo,
     cmpNormalDialog,
-    cmpLoadingOverlay
+    cmpLoadingOverlay,
+    cmpUbicacion
   },
   data: () => ({
     edit: false

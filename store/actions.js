@@ -123,7 +123,18 @@ export default {
         const activos = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const activo = { id: doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
+          const activo = { 
+            id: doc.id,
+            nombre: doc.data().nombre,
+            serie: doc.data().serie,
+            inventario: doc.data().inventario,
+            tipo: doc.data().tipo,
+            valor: doc.data().valor,
+            descripcion: doc.data().desc,
+            fichaalta: doc.data().fichaalta,
+            documentocompra: doc.data().dc,
+            asignadoa: doc.data().asignadoa
+          }
           activos.push(activo)
         })
         commit('llenaListaActivos', activos)
@@ -163,6 +174,31 @@ export default {
         }
         commit('commitSetLoading', false)
         return Promise.resolve(activo)
+      })
+      .catch((e) => {
+        console.log('Error en sistema' + e)
+        return Promise.reject(e)
+      })
+
+  },
+  async cargaDatosFuncionario({ commit }, payload) {
+    commit('commitSetLoading', true)
+    return await this.$fire.firestore.collection('funcionario').doc(payload)
+      .get().then((doc) => {
+        let funcionario = null
+        if (!doc.empty) {
+          funcionario = {
+            id: doc.id,
+            nombre: doc.data().nombre,
+            apellido: doc.data().apellido,
+            rut: doc.data().rut,
+            email: doc.data().email,
+            departamento: doc.data().departamento,
+            seccion: doc.data().seccion
+          }
+        }
+        commit('commitSetLoading', false)
+        return Promise.resolve(funcionario)
       })
       .catch((e) => {
         console.log('Error en sistema' + e)
