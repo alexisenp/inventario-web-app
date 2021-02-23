@@ -83,6 +83,11 @@
         <cmp-ubicacion :id-funcionario="activo.asignadoa" />
       </v-col>
     </v-row>
+    <v-row justify="center" align="center">
+      <v-col sm="8">
+        <cmp-datos-compra :id-datos-compra="activo.dc" />
+      </v-col>
+    </v-row>
     <cmp-loading-overlay />
     <cmp-normal-dialog ref="myAlert" />
   </div>
@@ -94,13 +99,15 @@ import cmpFormIngresoActivo from '@/pages/activos/components/formIngresoActivo'
 import cmpLoadingOverlay from '@/components/loadingOverlay'
 import cmpNormalDialog from '@/components/normalDialog'
 import cmpUbicacion from '@/pages/activos/components/ubicacion'
+import cmpDatosCompra from '@/pages/activos/components/datosCompra'
 
 export default {
   components: {
     cmpFormIngresoActivo,
     cmpNormalDialog,
     cmpLoadingOverlay,
-    cmpUbicacion
+    cmpUbicacion,
+    cmpDatosCompra
   },
   data: () => ({
     edit: false

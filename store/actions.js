@@ -157,8 +157,8 @@ export default {
             valor: doc.data().valor,
             descripcion: doc.data().desc,
             fichaalta: doc.data().fichaalta,
-            documentocompra: doc.data().dc,
-            asignadoa: doc.data().asignadoa
+            dc: doc.data().dc,
+            asignadoa: doc.data().asignadoa,
           }
           activos.push(activo)
         })
@@ -225,6 +225,31 @@ export default {
         }
         commit('commitSetLoading', false)
         return Promise.resolve(funcionario)
+      })
+      .catch((e) => {
+        console.log('Error en sistema' + e)
+        return Promise.reject(e)
+      })
+
+  },
+  async cargaDatosCompraActivo({ commit }, payload) {
+    commit('commitSetLoading', true)
+    return await this.$fire.firestore.collection('datoscompra').doc(payload)
+      .get().then((doc) => {
+        let datosCompra = null
+        if (!doc.empty) {
+          datosCompra = {
+            id: doc.id,
+            nombreE: doc.data().nombreE,
+            rutE: doc.data().rutE,
+            fact: doc.data().fact,
+            ffact: doc.data().ffact,
+            oc: doc.data().oc,
+            total: doc.data().total
+          }
+        }
+        commit('commitSetLoading', false)
+        return Promise.resolve(datosCompra)
       })
       .catch((e) => {
         console.log('Error en sistema' + e)

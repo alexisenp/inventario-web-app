@@ -5,7 +5,7 @@
         <v-text-field
           v-model="nombre"
           :error-messages="nombreErrors"
-          label="Nombre"
+          label="Nombres"
           required
           @input="activaBoton($v.nombre)"
           @blur="$v.nombre.$touch()"
@@ -15,7 +15,7 @@
         <v-text-field
           v-model="apellido"
           :error-messages="apellidoErrors"
-          label="Apellido"
+          label="Apellidos"
           required
           @input="activaBoton($v.apellido)"
           @blur="$v.apellido.$touch()"
