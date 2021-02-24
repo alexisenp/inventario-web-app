@@ -194,6 +194,11 @@ export default {
           icon: 'mdi-inbox-multiple-outline ',
           title: 'Fichas de alta',
           to: '/altas'
+        },
+        {
+          icon: 'mdi-inbox-multiple-outline ',
+          title: 'Fichas de baja',
+          to: '/bajas'
         }
       ],
       miniVariant: false,

@@ -20,7 +20,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="computedDateFormatted"
-              label="Fecha alta"
+              label="Fecha baja"
               prepend-icon="mdi-calendar"
               readonly
               v-bind="attrs"
@@ -37,7 +37,7 @@
     </v-row>
     <v-row class="my-8 mx-n10">
       <v-col sm="12">
-        <cmp-agrega-activos @set-activos="setActivos" />
+        <cmp-agrega-activos :is-alta="false" @set-activos="setActivos" />
       </v-col>
     </v-row>
     <v-row align="center" justify="space-around">

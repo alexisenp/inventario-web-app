@@ -141,6 +141,25 @@ export default {
       // retur
     }
   },
+  cargaBajas({ commit }) {
+    try {
+      commit('commitSetLoading', true)
+      this.$fire.firestore.collection('bajas').get().then((querySnapshot) => {
+        const bajas = []
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          const baja = { id: doc.id, numero: doc.data().numero, fecha: doc.data().fecha, activos: doc.data().activos, firmantes: doc.data().firmantes }
+          bajas.push(baja)
+        })
+        commit('llenaListaBajas', bajas)
+        commit('commitSetLoading', false)
+      })
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+      // retur
+    }
+  },
   cargaActivos({ commit }) {
     try {
       commit('commitSetLoading', true)

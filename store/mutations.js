@@ -25,6 +25,9 @@ export default {
   llenaListaAltas (state, payload) {
     state.listaAltas = payload
   },
+  llenaListaBajas (state, payload) {
+    state.listaBajas = payload
+  },
   llenaListaActivos (state, payload) {
     state.listaActivos = payload
   },

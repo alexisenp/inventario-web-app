@@ -24,6 +24,15 @@ export default {
       // return
     }
   },
+  getBajas: (state) => {
+    try {
+      return state.listaBajas
+    } catch (e) {
+      alert('Error en sistema ' +
+        e)
+      // return
+    }
+  },
   getAltaSeleccionada: (state) => {
     try {
       return state.altaSeleccionada

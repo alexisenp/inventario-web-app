@@ -8,7 +8,7 @@
           large
           color="primary"
           class="ml-8"
-          to="/altas/"
+          to="/bajas/"
         >
           <v-icon dark>
             mdi-arrow-left
@@ -16,14 +16,14 @@
         </v-btn>
       </v-col>
       <v-col cols="12" sm="8" md="8" class="headline">
-        Nueva alta
+        Nueva baja
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="8">
         <v-card class="pa-5">
           <v-card-text>
-            <cmp-form-ingreso-datos @cancelar="cancelar" @vista-previa="generaVistaPrevia" />
+            <cmp-form-ingreso-datos @cancelar="cancelar" @vista-previa="grabaDatos" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import cmpFormIngresoDatos from '@/pages/altas/components/formIngresoDatos'
+import { mapActions } from 'vuex'
+import cmpFormIngresoDatos from '@/pages/bajas/components/formIngresoDatos'
 import cmpFichaAlta from '@/pages/activos/components/fichaAlta'
 
 export default {
@@ -42,12 +43,15 @@ export default {
     cmpFichaAlta
   },
   methods: {
-    async generaVistaPrevia (baja) {
-      await this.$refs.fichaAlta.showDialog(baja.activos)
-      this.$router.push('/bajas')
+    ...mapActions([
+      'grabaFichaAlta'
+    ]),
+    async grabaDatos (alta) {
+      await this.$refs.fichaAlta.showDialog(alta.activos)
+      this.$router.push('/altas')
     },
     cancelar () {
-      this.$router.push('/bajas')
+      this.$router.push('/altas')
     }
   }
 }
