@@ -2,7 +2,6 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
-  target: 'static',
   srcDir: 'src',
   buildDir: 'functions/.nuxt',
 
@@ -52,14 +51,14 @@ export default {
       '@nuxtjs/firebase',
       {
         config: {
-          apiKey: 'AIzaSyAn5dMK0HJctjiFbbKoN6Za_y3LFRNsPbI',
-          authDomain: 'control-activos-b02d1.firebaseapp.com',
+          apiKey: 'AIzaSyB7q9C58jlXvW-jEjzDnMTA3BXQ4HgxKH4',
+          authDomain: 'inventarioapp-9bfa3.firebaseapp.com',
           databaseURL: '',
-          projectId: 'control-activos-b02d1',
-          storageBucket: 'control-activos-b02d1.appspot.com',
-          messagingSenderId: '83709491463',
-          appId: '1:83709491463:web:410c2b9d367fee29eaada2',
-          measurementId: 'G-CCN2EP1LQE'
+          projectId: 'inventarioapp-9bfa3',
+          storageBucket: 'inventarioapp-9bfa3.appspot.com',
+          messagingSenderId: '315925124515',
+          appId: '1:315925124515:web:a870f90efec67792693616',
+          measurementId: 'G-GVM63B63L3'
         },
         services: {
           auth: {
