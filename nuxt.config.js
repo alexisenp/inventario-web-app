@@ -3,6 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
+  srcDir: 'src',
+  buildDir: 'functions/.nuxt',
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -50,14 +52,14 @@ export default {
       '@nuxtjs/firebase',
       {
         config: {
-          apiKey: 'AIzaSyAv8kKa07ZNEc_huBe3MFnFwJ7yVH4KPmY',
-          authDomain: 'sistema-inventario-a2987.firebaseapp.com',
+          apiKey: 'AIzaSyAn5dMK0HJctjiFbbKoN6Za_y3LFRNsPbI',
+          authDomain: 'control-activos-b02d1.firebaseapp.com',
           databaseURL: '',
-          projectId: 'sistema-inventario-a2987',
-          storageBucket: 'sistema-inventario-a2987.appspot.com',
-          messagingSenderId: '863648488577',
-          appId: '1:863648488577:web:9deb5cfca935a22e0c8180',
-          measurementId: 'G-FSY6QS49GN'
+          projectId: 'control-activos-b02d1',
+          storageBucket: 'control-activos-b02d1.appspot.com',
+          messagingSenderId: '83709491463',
+          appId: '1:83709491463:web:410c2b9d367fee29eaada2',
+          measurementId: 'G-CCN2EP1LQE'
         },
         services: {
           auth: {
@@ -121,5 +123,6 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
+    extractCSS: true
   }
 }
