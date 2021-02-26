@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="6" md="3">
         <v-card>
           <v-card-title class="headline">
-            Agregar nuevo funcionario
+            Funcionarios
           </v-card-title>
           <v-card-text>
             <!-- <p>Esta es la página de inicio.</p> -->
@@ -17,17 +17,16 @@
               nuxt
               to="/funcionarios/ingreso"
             >
-              Continuar
+              Nuevo
             </v-btn>
+            <v-spacer />
           </v-card-actions>
         </v-card>
       </v-col>
-    </v-row>
-    <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="6" md="3">
         <v-card>
           <v-card-title class="headline">
-            Agregar nuevo activo
+            Activo
           </v-card-title>
           <v-card-text>
             <!-- <p>Esta es la página de inicio.</p>-->
@@ -40,17 +39,16 @@
               nuxt
               to="/activos/ingreso"
             >
-              Continuar
+              Nuevo
             </v-btn>
+            <v-spacer />
           </v-card-actions>
         </v-card>
       </v-col>
-    </v-row>
-    <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
+      <v-col cols="12" sm="6" md="3">
         <v-card>
           <v-card-title class="headline">
-            Generar nueva alta
+            Alta
           </v-card-title>
           <v-card-text>
             <!-- <p>Esta es la página de inicio.</p>-->
@@ -63,8 +61,31 @@
               nuxt
               to="/altas/ingreso"
             >
-              Continuar
+              Nuevo
             </v-btn>
+            <v-spacer />
+          </v-card-actions>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <v-card>
+          <v-card-title class="headline">
+            Baja
+          </v-card-title>
+          <v-card-text>
+            <!-- <p>Esta es la página de inicio.</p>-->
+            <hr class="my-3">
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              nuxt
+              to="/bajas/ingreso"
+            >
+              Nuevo
+            </v-btn>
+            <v-spacer />
           </v-card-actions>
         </v-card>
       </v-col>
