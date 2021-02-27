@@ -89,7 +89,7 @@ export default {
         let activos = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const activo = { id: doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
+          const activo = { id: doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, subtipo: doc.data().subtipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
           activos.push(activo)
         })
         commit('llenaListaActivos', activos)
@@ -109,7 +109,7 @@ export default {
         let activos = []
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
-          const activo = { id: doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
+          const activo = { id: doc.id, nombre: doc.data().nombre, serie: doc.data().serie, inventario: doc.data().inventario, tipo: doc.data().tipo, subtipo: doc.data().subtipo, valor: doc.data().valor, descripcion: doc.data().desc, fichaalta: doc.data().fichaalta, documentocompra: doc.data().dc }
           activos.push(activo)
         })
         commit('llenaListaActivos', activos)
@@ -173,6 +173,7 @@ export default {
             serie: doc.data().serie,
             inventario: doc.data().inventario,
             tipo: doc.data().tipo,
+            subtipo: doc.data().subtipo,
             valor: doc.data().valor,
             descripcion: doc.data().desc,
             fichaalta: doc.data().fichaalta,
@@ -356,6 +357,7 @@ export default {
           serie: activo.serie,
           inventario: activo.inventario,
           tipo: activo.tipo,
+          subtipo: activo.subtipo,
           valor: activo.valor,
           desc: activo.descripcion,
           // ubicacion: payload.ubicacion,
@@ -458,7 +460,7 @@ export default {
     commit('commitSetLoading', true)
     const activoRef = this.$fire.firestore.collection('activo').doc(payload.id)
     return await this.$fire.firestore.runTransaction((transaction) => {
-      transaction.update(activoRef, { nombre: payload.nombre, serie: payload.serie, inventario: payload.inventario, tipo: payload.tipo, valor: payload.valor, desc: payload.descripcion })
+      transaction.update(activoRef, { nombre: payload.nombre, serie: payload.serie, inventario: payload.inventario, tipo: payload.tipo, subtipo: payload.subtipo, valor: payload.valor, desc: payload.descripcion })
       
       transaction.set(activoRef.collection('historial').doc(), {
         fecha: this.$fireModule.firestore.FieldValue.serverTimestamp(),

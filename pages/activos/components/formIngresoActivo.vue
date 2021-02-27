@@ -13,14 +13,14 @@
       </v-col>
     </v-row>
     <v-row align="center">
-      <v-col class="d-flex" cols="12" sm="6">
+      <v-col class="d-flex" cols="12" sm="4">
         <v-text-field
           v-model="serie"
           label="Serie"
           required
         />
       </v-col>
-      <v-col class="d-flex" cols="12" sm="6">
+      <v-col class="d-flex" cols="12" sm="4">
         <v-text-field
           v-if="!isEdit"
           v-model="inventario"
@@ -32,6 +32,16 @@
         <div v-else>
           {{ inventario }}
         </div>
+      </v-col>
+      <v-col class="d-flex" cols="12" sm="4">
+        <v-text-field
+          v-model="valor"
+          :error-messages="valorErrors"
+          label="Valor"
+          required
+          @input="activaBoton($v.valor)"
+          @blur="$v.valor.$touch()"
+        />
       </v-col>
     </v-row>
     <v-row align="center">
@@ -46,13 +56,14 @@
         />
       </v-col>
       <v-col class="d-flex" cols="12" sm="6">
-        <v-text-field
-          v-model="valor"
-          :error-messages="valorErrors"
-          label="Valor"
-          required
-          @input="activaBoton($v.valor)"
-          @blur="$v.valor.$touch()"
+        <v-select
+          v-model="subtipo"
+          :error-messages="subtipoErrors"
+          :items="subtiposActivo"
+          label="Sub-Tipo"
+          :disabled="subtiposActivo.length == 0"
+          @input="activaBoton($v.subtipo)"
+          @blur="$v.subtipo.$touch()"
         />
       </v-col>
     </v-row>
@@ -128,6 +139,7 @@ export default {
       }
     },
     tipo: { required },
+    subtipo: { required },
     valor: { required }
   },
   props: {
@@ -156,10 +168,33 @@ export default {
     serie: '',
     inventario: '',
     tipo: '',
+    subtipo: '',
     valor: '',
     descripcion: ''
   }),
   computed: {
+    subtiposActivo () {
+      let subtipos = []
+      switch (this.tipo) {
+        // Dummy data, to be fixed later
+        case 'Edificaciones':
+          subtipos = ['subEdificaciones1', 'subEdificaciones2']
+          break
+        case 'Maquinarias y equipos':
+          subtipos = ['subMaquinarias y equipos1', 'subMaquinarias y equipos2']
+          break
+        case 'Vehículo':
+          subtipos = ['subVehículo1', 'subVehículo2']
+          break
+        case 'Muebles y enseres':
+          subtipos = ['subMuebles y enseres1', 'subMuebles y enseres2']
+          break
+        case 'Equipos computacionales':
+          subtipos = ['subEquipos computacionales1', 'subEquipos computacionales2']
+          break
+      }
+      return subtipos
+    },
     nombreErrors () {
       const errors = []
       if (!this.$v.nombre.$dirty) { return errors }
@@ -180,6 +215,12 @@ export default {
       !this.$v.tipo.required && errors.push('El tipo es obligatorio.')
       return errors
     },
+    subtipoErrors () {
+      const errors = []
+      if (!this.$v.subtipo.$dirty) { return errors }
+      !this.$v.subtipo.required && errors.push('El sub-tipo es obligatorio.')
+      return errors
+    },
     valorErrors () {
       const errors = []
       if (!this.$v.valor.$dirty) { return errors }
@@ -193,6 +234,7 @@ export default {
     this.serie = this.activo.serie
     this.inventario = this.activo.inventario
     this.tipo = this.activo.tipo
+    this.subtipo = this.activo.subtipo
     this.valor = this.activo.valor
     this.descripcion = this.activo.descripcion
   },
@@ -210,6 +252,7 @@ export default {
       this.serie = ''
       this.inventario = ''
       this.tipo = ''
+      this.subtipo = ''
       this.valor = ''
       this.descripcion = ''
     },
@@ -217,7 +260,7 @@ export default {
       // esta funcion devuelve los datos del activo ingresado por el usuario al componente padre
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        const activo = { id: this.id, nombre: this.nombre, serie: this.serie, inventario: this.inventario, tipo: this.tipo, valor: this.valor, descripcion: this.descripcion }
+        const activo = { id: this.id, nombre: this.nombre, serie: this.serie, inventario: this.inventario, tipo: this.tipo, subtipo: this.subtipo, valor: this.valor, descripcion: this.descripcion }
         this.$emit('retorna-datos-activo-ingresado', activo)
         this.clear()
       }

@@ -60,7 +60,7 @@ export default {
       if (this.activos.length > 0) {
         const nuevoArrayActivos = []
         this.activos.forEach((arrayItem) => {
-          const activo = { nombre: arrayItem.nombre, serie: arrayItem.serie, inventario: arrayItem.inventario, tipo: arrayItem.tipo, valor: arrayItem.valor, descripcion: arrayItem.descripcion }
+          const activo = { nombre: arrayItem.nombre, serie: arrayItem.serie, inventario: arrayItem.inventario, tipo: arrayItem.tipo, subtipo: arrayItem.subtipo, valor: arrayItem.valor, descripcion: arrayItem.descripcion }
           nuevoArrayActivos.push(activo)
         })
         this.$emit('graba-datos', nuevoArrayActivos)

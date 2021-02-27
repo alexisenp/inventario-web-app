@@ -60,6 +60,12 @@
               </v-row>
               <v-row>
                 <v-col sm="3">
+                  Sub-Tipo
+                </v-col>
+                <v-col>{{ activo.subtipo }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col sm="3">
                   Valor
                 </v-col>
                 <v-col>{{ activo.valor }}</v-col>
