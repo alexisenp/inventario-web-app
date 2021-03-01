@@ -42,12 +42,12 @@ export default {
     cmpFichaAlta
   },
   methods: {
-    async generaVistaPrevia (baja) {
-      await this.$refs.fichaAlta.showDialog(baja.activos)
-      this.$router.push('/bajas')
+    async generaVistaPrevia (alta) {
+      await this.$refs.fichaAlta.showDialog(alta.activos, alta.numero)
+      this.$router.push('/altas')
     },
     cancelar () {
-      this.$router.push('/bajas')
+      this.$router.push('/altas')
     }
   }
 }

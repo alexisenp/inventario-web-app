@@ -275,9 +275,10 @@ export default {
     }
   },
   methods: {
-    showDialog (activos) {
+    showDialog (activos, numero = '') {
       this.dialog = true
       this.activos = activos
+      this.nroResolucion = numero
       return new Promise((resolve, reject) => {
         this.resolve = resolve
         this.reject = reject
@@ -307,7 +308,6 @@ export default {
         }
         const fichaAlta = { numero: 'Borrador', fecha: date, activos: arrayIdActivos, firmantes: this.firmantes }
         if (this.nroResolucion !== '') {
-          alert(this.nroResolucion + ' NRO DE RESOLUCION SETEADO')
           fichaAlta.numero = this.nroResolucion
         }
         this.$store.dispatch('actionSetLoading', true)

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+
 import cmpFormIngresoDatos from '@/pages/bajas/components/formIngresoDatos'
 import cmpFichaAlta from '@/pages/activos/components/fichaAlta'
 
@@ -43,15 +43,12 @@ export default {
     cmpFichaAlta
   },
   methods: {
-    ...mapActions([
-      'grabaFichaAlta'
-    ]),
-    async grabaDatos (alta) {
-      await this.$refs.fichaAlta.showDialog(alta.activos)
-      this.$router.push('/altas')
+    async grabaDatos (baja) {
+      await this.$refs.fichaAlta.showDialog(baja.activos)
+      this.$router.push('/bajas')
     },
     cancelar () {
-      this.$router.push('/altas')
+      this.$router.push('/bajas')
     }
   }
 }
