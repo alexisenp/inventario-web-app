@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-text>
-        <cmp-form-ingreso-activo @retorna-datos-activo-ingresado="retornaActivo" />
+        <cmp-form-ingreso-activo :activos="activos" @retorna-datos-activo-ingresado="retornaActivo" />
         <p class="title">
           Activos
         </p>
