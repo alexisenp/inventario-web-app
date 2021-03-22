@@ -221,6 +221,10 @@
 import CmpConfirmDialog from '@/components/confirmDialog'
 import cmpNormalDialog from '@/components/normalDialog'
 import cmpLoadingOverlay from '@/components/loadingOverlay'
+import Docxtemplater from 'docxtemplater'
+import JSzip from 'jszip'
+import JSzipUtils from 'jszip-utils'
+import { saveAs } from 'file-saver'
 
 export default {
   components: {
@@ -240,34 +244,40 @@ export default {
       },
       {
         id: 2,
-        texto: 'b) El D.L. 1305/76 que reestructura y regionaliza el Ministerio de la Vivienda y Urbanismo; El D.S. 355/76 de Vivienda y Urbanismo, que aprueba el Reglamento Orgánico de los Servicios de Vivienda y Urbanización.'
+        texto: 'b) El D.L. 1305/76 que reestructura y regionaliza el Ministerio de la Vivienda y Urbanismo.'
       },
       {
         id: 3,
-        texto: 'c) Ley N° 19.886 denominada Ley de Compras Públicas y el Reglamento D.S. 250/04 del Ministerio de Hacienda y sus modificaciones.'
+        texto: 'c) El D.S. 355/76 de Vivienda y Urbanismo, que aprueba el Reglamento Orgánico de los Servicios de Vivienda y Urbanización.'
       },
       {
         id: 4,
-        texto: 'd) Las Resoluciones N° 6, 7 y 8, todas de 2019, de la Contraloría General de la República, sobre exención del trámite de Toma de Razón.'
+        texto: 'd) Ley N° 19.886 denominada Ley de Compras Públicas y el Reglamento D.S. 250/04 del Ministerio de Hacienda y sus modificaciones.'
       },
       {
         id: 5,
-        texto: 'e) La Ley N° 19.880 que establece las Bases de los Procedimientos Administrativos que rigen los Actos de los Órganos de la Administración del Estado.'
+        texto: 'e) Las Resoluciones N° 6, 7 y 8, todas de 2019, de la Contraloría General de la República, sobre exención del trámite de Toma de Razón.'
       },
       {
         id: 6,
-        texto: 'f) D.F.L. N° 29 de 2004, que aprueba texto refundido, coordinado y sistematizado de la Ley N° 18.834 de 1989, sobre Estatuto Administrativo; y demás normas pertinentes.'
+        texto: 'f) La Ley N° 19.880 que establece las Bases de los Procedimientos Administrativos que rigen los Actos de los Órganos de la Administración del Estado.'
       },
       {
         id: 7,
-        texto: 'g) El Decreto N° 577, de 1978, del Ministerio de Tierras y Colonización, hoy Bienes Nacionales.'
+        texto: 'g) D.F.L. N° 29 de 2004, que aprueba texto refundido, coordinado y sistematizado de la Ley N° 18.834 de 1989, sobre Estatuto Administrativo; y demás normas pertinentes.'
       },
       {
         id: 8,
-        texto: 'h) Las facultades que me confieren el Decreto Supremo Nº 355 y el Decreto TRA N° 272/12/2019 de fecha 18/03/2019, ambos del MINVU.'
+        texto: 'h) El Decreto N° 577, de 1978, del Ministerio de Tierras y Colonización, hoy Bienes Nacionales.'
+      },
+      {
+        id: 9,
+        texto: 'i) Las facultades que me confieren el Decreto Supremo Nº 355 y el Decreto TRA N° 272/12/2019 de fecha 18/03/2019, ambos del MINVU.'
       }
       ],
-      considerandos: [{ id: 9, texto: 'a) La necesidad del Servicio de proceder al alta y asignación de la cámara fotográfica que se indica en la presente Resolución, dicto lo siguiente:' }],
+      considerandos: [
+        { id: 10, texto: 'a) La necesidad del Servicio de proceder al alta del activo que se indica en la presente Resolución, dicto lo siguiente:' }
+      ],
       resolucion1: '1. DISPÓNESE el alta en el Servicio de Vivienda y Urbanización Región de Coquimbo, del activo que se indica y asígnese a la unidad que se señala según el siguiente detalle:',
       resolucion2: '2. La Sección Contabilidad y Presupuestos del SERVIU Región de Coquimbo, deberá dar de alta contablemente la especie identificada precedentemente y efectuar los registros respectivos.',
       activos: [],
@@ -275,6 +285,42 @@ export default {
     }
   },
   methods: {
+    loadFile (url, callback) {
+      JSzipUtils.getBinaryContent(url, callback)
+    },
+    generaWord () {
+      this.dialog = false
+      const prev = {
+        activos: this.activos
+      }
+      this.loadFile('/p_alta.docx', function (error, content) {
+        if (error) { throw error };
+        const zip = new JSzip(content)
+        const doc = new Docxtemplater().loadZip(zip)
+        doc.setData(prev)
+
+        try {
+          doc.render()
+        } catch (error) {
+          const e = {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+            properties: error.properties
+          }
+          // eslint-disable-next-line
+          console.log(JSON.stringify({ error: e }))
+          // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
+          throw error
+        }
+
+        const out = doc.getZip().generate({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        })
+        saveAs(out, 'alta.docx')
+      })
+    },
     showDialog (activos, numero = '') {
       this.dialog = true
       this.activos = activos
@@ -289,7 +335,7 @@ export default {
       this.dialog = false
     },
     generaPdf () {
-      alert('Genera archivo imprimible')
+      this.generaWord()
       this.hideDialog()
       this.$router.push('/activos')
     },

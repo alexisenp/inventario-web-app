@@ -23,9 +23,9 @@
           <v-btn
             dark
             text
-            @click="dialog = false"
+            @click="generaWord()"
           >
-            Imprimir
+            Genera Word
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -66,7 +66,7 @@
                 UBICACION
               </v-col>
               <v-col sm="10">
-                {{ funcionario.seccion }}
+                {{ funcionario.departamento }} - {{ funcionario.seccion }}
               </v-col>
             </v-row>
             <v-row class="mt-n6">
@@ -74,7 +74,7 @@
                 RESPONSABLE
               </v-col>
               <v-col sm="10">
-                {{ funcionario.nombre }}
+                {{ funcionario.nombre }} {{ funcionario.apellido }}
               </v-col>
             </v-row>
           </v-col>
@@ -102,6 +102,10 @@
 
 <script>
 import cmpFichaInventarioTable from '@/pages/activos/components/fichaInventarioTable'
+import Docxtemplater from 'docxtemplater'
+import JSzip from 'jszip'
+import JSzipUtils from 'jszip-utils'
+import { saveAs } from 'file-saver'
 
 export default {
   components: {
@@ -124,6 +128,45 @@ export default {
     }
   },
   methods: {
+    loadFile (url, callback) {
+      JSzipUtils.getBinaryContent(url, callback)
+    },
+    generaWord () {
+      this.dialog = false
+      const prev = {
+        responsable_nombre: this.funcionario.nombre + ' ' + this.funcionario.apellido,
+        ubicacion_seccion: this.funcionario.seccion,
+        ubicacion_dpto: this.funcionario.departamento,
+        activos: this.activos
+      }
+      this.loadFile('/p_inventario.docx', function (error, content) {
+        if (error) { throw error };
+        const zip = new JSzip(content)
+        const doc = new Docxtemplater().loadZip(zip)
+        doc.setData(prev)
+
+        try {
+          doc.render()
+        } catch (error) {
+          const e = {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+            properties: error.properties
+          }
+          // eslint-disable-next-line
+          console.log(JSON.stringify({ error: e }))
+          // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
+          throw error
+        }
+
+        const out = doc.getZip().generate({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        })
+        saveAs(out, 'inventario.docx')
+      })
+    },
     open (funcionario) {
       this.dialog = true
       this.funcionario = funcionario

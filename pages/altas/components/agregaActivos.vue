@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <div class="title ma-5">
-      Activos {{ tipoActivos }}
+      Activos Alta
     </div>
     <v-card-text>
       <v-row class="mt-5">
@@ -61,22 +61,11 @@ export default {
     cmpNormalDialog,
     cmpListadoActivos
   },
-  props: {
-    isAlta: {
-      type: Boolean,
-      default: true
-    }
-  },
   data: () => ({
     activos: [],
     valorABuscar: '',
     btnDisabled: true
   }),
-  computed: {
-    tipoActivos () {
-      return this.isAlta ? 'Alta' : 'Baja'
-    }
-  },
   methods: {
     clean () {
       this.activos = []
@@ -93,13 +82,16 @@ export default {
       if (this.valorABuscar === '') {
         this.$refs.myAlert.open('Campo vacío', 'Debe ingresar un valor a buscar.')
       } else if (this.activos.filter((valor) => { return valor.inventario === this.valorABuscar }).length === 0) {
-        this.$store.dispatch('buscarActivo', this.valorABuscar)
+        this.$store.dispatch('buscarActivoAlta', this.valorABuscar)
           .then((activo) => {
             if (activo != null) {
-              if (this.isAlta) {
-                this.esAlta(activo)
+              if (activo.fichaalta != null) {
+                this.$refs.myAlert.open('Activo con alta', 'El activo indicado ya tiene alta en el sistema.')
               } else {
-                this.esBaja(activo)
+                this.valorABuscar = ''
+                this.activos.push(activo)
+                this.$emit('set-activos', this.activos)
+                this.btnDisabled = false
               }
             } else {
               this.$refs.myAlert.open('Activo no encontrado', 'No existe un activo con el numero de inventario ingresado.')
@@ -110,30 +102,6 @@ export default {
           })
       } else {
         this.$refs.myAlert.open('Activo ya existe', 'Activo ya ingresado.')
-      }
-    },
-    esAlta (activo) {
-      if (activo.fichaalta != null) {
-        this.$refs.myAlert.open('Activo con alta', 'El activo indicado ya tiene alta en el sistema.')
-      } else {
-        this.valorABuscar = ''
-        this.activos.push(activo)
-        this.$emit('set-activos', this.activos)
-        this.btnDisabled = false
-      }
-    },
-    esBaja (activo) {
-      if (activo.baja != null) {
-        this.$refs.myAlert.open('Activo con baja', 'El activo indicado ya fue dado de baja en el sistema.')
-      } else if (activo.asignadoa != null) {
-        this.$refs.myAlert.open('Activo asignado', 'El activo indicado esta asignado a un funcionario, lo debe quitar del funcionario antes de darlo de baja.')
-      } else if (activo.fichaalta == null) {
-        this.$refs.myAlert.open('Activo sin alta', 'El activo indicado no se ha dado de alta en el sistema.')
-      } else {
-        this.valorABuscar = ''
-        this.activos.push(activo)
-        this.$emit('set-activos', this.activos)
-        this.btnDisabled = false
       }
     }
   }

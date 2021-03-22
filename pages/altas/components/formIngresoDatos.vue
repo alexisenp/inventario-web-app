@@ -65,7 +65,7 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
-import cmpAgregaActivos from '@/components/agregaActivos'
+import cmpAgregaActivos from '@/pages/altas/components/agregaActivos'
 import cmpNormalDialog from '@/components/normalDialog'
 
 export default {
