@@ -142,7 +142,7 @@ export default {
       switch (this.departamento) {
         // Dummy data, to be fixed later
         case 'Administración y finanzas':
-          options = ['Contabilidad', 'Servicios Generales']
+          options = ['Contabilidad', 'Servicios Generales', 'Informática']
           break
         case 'Jurídico':
           options = ['Jurídico', 'Prevención de riesgos']

@@ -49,14 +49,14 @@ export default {
       '@nuxtjs/firebase',
       {
         config: {
-          apiKey: 'AIzaSyB7q9C58jlXvW-jEjzDnMTA3BXQ4HgxKH4',
-          authDomain: 'inventarioapp-9bfa3.firebaseapp.com',
+          apiKey: 'AIzaSyA9Zqx9pNuydMaxAcGMNOcAuPN7LeXYuyI',
+          authDomain: 'prototipo-control-activos.firebaseapp.com',
           databaseURL: '',
-          projectId: 'inventarioapp-9bfa3',
-          storageBucket: 'inventarioapp-9bfa3.appspot.com',
-          messagingSenderId: '315925124515',
-          appId: '1:315925124515:web:a870f90efec67792693616',
-          measurementId: 'G-GVM63B63L3'
+          projectId: 'prototipo-control-activos',
+          storageBucket: 'prototipo-control-activos.appspot.com',
+          messagingSenderId: '324516241491',
+          appId: '1:324516241491:web:f2c327e7e293ec228926a6',
+          measurementId: 'G-CF8PQ6TZ9Z'
         },
         services: {
           auth: {
